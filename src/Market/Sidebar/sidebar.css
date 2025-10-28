@@ -1,0 +1,37 @@
+.layout {
+  display: flex;                /* Puts sidebar on the left, content on the right */
+  height: calc(100vh - 60px);   /* Adjust for nav bar height if it's fixed */
+}
+
+.sidebar {
+  width: 10%;
+  background-color: #2F2F2F;
+  color: #E0E0E0;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+.sidebar-items{
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar a {
+  color: #E0E0E0;
+  text-decoration: none;
+  font-size: 20px;
+  margin-bottom: 1rem;
+}
+
+.sidebar a:hover {
+  
+}
+
+.main-content {
+  flex: 1;
+  background-color: #121212;
+  padding: 2rem;
+  overflow-y: auto;
+}

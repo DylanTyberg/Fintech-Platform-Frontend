@@ -1,24 +1,22 @@
-import logo from './logo.svg';
 import './App.css';
+import {Routes, Route} from 'react-router-dom'
+import NavigationBar from './Navigation-bar/navigation-bar';
+import Sidebar from './Market/Sidebar/sidebar';
+import Indices from './Market/indices/indices';
+import SignIn from './Authentication/sign-in/sign-in';
+import AllStocks from './Market/All-Stocks/all-stocks';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="sign-in" element={<SignIn/>}/>
+      <Route path="/" element={<NavigationBar />}>
+        <Route path="/" element={<Sidebar />}>
+          <Route index element={<Indices/>}/>
+          <Route path="/all-stocks" element={<AllStocks/>}/>
+        </Route>
+      </Route>
+    </Routes>
   );
 }
 

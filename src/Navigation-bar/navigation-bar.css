@@ -1,0 +1,29 @@
+.nav-bar{
+  display: flex;
+    
+}
+.links{
+    width: 95%;
+    height: 50px;
+    background-color: #1f1f1f;
+    color: white;
+    display: flex;
+    gap: 60px;
+    align-items: center;
+    justify-content: center;
+    
+}
+.sign-in-button{
+    width: 5%;
+    height: 50px;
+    background-color: #1f1f1f;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+a {
+    color: white;
+    text-decoration: none;
+}

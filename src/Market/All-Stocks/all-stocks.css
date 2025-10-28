@@ -1,0 +1,22 @@
+.stock-card{
+    background-color: #2f2f2f;
+    height: 80px;
+
+
+}
+.stock-card:hover{
+    cursor: pointer;
+    transform: scale(1.03);
+}
+.stock-name{
+    font-family: 'Inter', sans-serif;
+    font-weight: 600; /* semi-bold */
+    margin-top: 15px;
+    margin-left: 30px;
+}
+.stocks-list{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 50px;
+}

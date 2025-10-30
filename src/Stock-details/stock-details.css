@@ -1,0 +1,55 @@
+.stock-details-page{
+    background-color: #2f2f2f;
+    height: 100%;
+}
+.details-component{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin-left: 10%;
+
+    align-items: center;
+    
+}
+.window-buttons{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.window-toggle {
+  color: #ffffff;               /* text color */
+  background-color: #3b3b3b;    /* slightly lighter than #2f2f2f, low contrast */
+  border: 1px solid #4a4a4a;
+  padding: 8px 16px;
+  margin: 0 4px;
+  border-radius: 999px;         /* pill shape */
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.window-toggle-active {
+  color: white;
+  background-color: #0078d4; /* nice blue */
+  border: none;
+  padding: 8px 16px;         /* vertical + horizontal padding */
+  margin: 0 4px;             /* space between buttons */
+  border-radius: 999px;      /* makes it fully rounded */
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+.window-toggle:hover {
+  background-color: #005a9e; /* darker blue on hover */
+}
+.window-toggle-active:hover {
+  background-color: #005a9e; /* darker blue on hover */
+}
+
+.window-toggle:active {
+  transform: scale(0.95);    /* small click effect */
+}
+
+
+
+

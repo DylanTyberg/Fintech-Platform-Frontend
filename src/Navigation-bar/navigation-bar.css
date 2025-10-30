@@ -3,9 +3,9 @@
     
 }
 .links{
-    width: 95%;
+    width: 100%;
     height: 50px;
-    background-color: #1f1f1f;
+    background-color: #242424;
     color: white;
     display: flex;
     gap: 60px;
@@ -16,7 +16,7 @@
 .sign-in-button{
     width: 5%;
     height: 50px;
-    background-color: #1f1f1f;
+    background-color: #242424;
     align-items: center;
     justify-content: center;
     display: flex;
@@ -26,4 +26,82 @@
 a {
     color: white;
     text-decoration: none;
+}
+
+.navbar-link {
+  display: block;                 /* makes it behave like a button */
+  color: #E0E0E0;                 /* light text on dark bg */
+  background-color: #3b3b3b;      /* matches your button inactive bg */
+  padding: 6px 16px;             /* vertical + horizontal padding */
+  margin-bottom: 8px;             /* spacing between links */
+  margin-top: 8px;
+  text-decoration: none;
+  font-size: 18px;
+  border: 1px solid #4a4a4a;     /* subtle border like buttons */
+  border-radius: 4px;             /* slightly rounded corners, rectangular */
+  transition: all 0.2s ease;
+}
+.navbar-link-active{
+  display: block;                 /* makes it behave like a button */
+  color: #E0E0E0;                 /* light text on dark bg */
+  background-color: #0078d4;      /* matches your button inactive bg */
+  padding: 6px 16px;             /* vertical + horizontal padding */
+  margin-bottom: 8px;             /* spacing between links */
+  margin-top: 8px;           /* spacing between links */
+  text-decoration: none;
+  font-size: 18px;
+  border: 1px solid #005a9e;     /* subtle border like buttons */
+  border-radius: 4px;             /* slightly rounded corners, rectangular */
+  transition: all 0.2s ease;
+}
+
+
+.navbar-link:hover {
+  background-color: #505050;      /* hover effect */
+  border-color: #606060;          /* slightly lighter border */
+}
+
+.navbar-link-active:hover {
+  background-color: #005a9e;      /* hover effect */
+  border-color: #606060;          /* slightly lighter border */
+}
+
+.navbar-link-sign-in {
+  display: block;                 /* makes it behave like a button */
+  color: #E0E0E0;                 /* light text on dark bg */
+  background-color: #3b3b3b;      /* matches your button inactive bg */
+  padding: 6px 16px;             /* vertical + horizontal padding */
+  margin-bottom: 8px;             /* spacing between links */
+  margin-top: 8px;
+  position: absolute;
+  margin-left: 75%;
+  text-decoration: none;
+  font-size: 18px;
+  border: 1px solid #4a4a4a;     /* subtle border like buttons */
+  border-radius: 4px;             /* slightly rounded corners, rectangular */
+  transition: all 0.2s ease;
+}
+.navbar-link-sign-in:hover {
+  background-color: #505050;      /* hover effect */
+  border-color: #606060;          /* slightly lighter border */
+}
+
+.navbar-link-sign-up {
+  display: block;                 /* makes it behave like a button */
+  color: #E0E0E0;                 /* light text on dark bg */
+  background-color: #3b3b3b;      /* matches your button inactive bg */
+  padding: 6px 16px;             /* vertical + horizontal padding */
+  margin-bottom: 8px;             /* spacing between links */
+  margin-top: 8px;
+  position: absolute;
+  margin-left: 90%;
+  text-decoration: none;
+  font-size: 18px;
+  border: 1px solid #4a4a4a;     /* subtle border like buttons */
+  border-radius: 4px;             /* slightly rounded corners, rectangular */
+  transition: all 0.2s ease;
+}
+.navbar-link-sign-up:hover {
+  background-color: #505050;      /* hover effect */
+  border-color: #606060;          /* slightly lighter border */
 }

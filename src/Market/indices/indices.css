@@ -16,6 +16,16 @@
     font-weight: 600; /* semi-bold */
     margin-left: 8%;
     border-radius: 5px;
+    position: relative;
+}
+.indices-stock-chart:hover{
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+.index-page-change{
+    position: absolute;
+    top: 15px;
+    right: 15px;
 }
 
 .title-date{

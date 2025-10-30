@@ -1,0 +1,60 @@
+.movers-page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.movers-list{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 3 columns */
+  gap: 16px;                             /* space between cards */
+  padding: 16px;
+    
+}
+.card-percent-change{
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+
+.movers-buttons{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.movers-toggle {
+  color: #ffffff;               /* text color */
+  background-color: #3b3b3b;    /* slightly lighter than #2f2f2f, low contrast */
+  border: 1px solid #4a4a4a;
+  padding: 8px 16px;
+  margin: 0 4px;
+  border-radius: 5px;         /* pill shape */
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.movers-toggle-active {
+  color: white;
+  background-color: #0078d4; /* nice blue */
+  border: none;
+  padding: 8px 16px;         /* vertical + horizontal padding */
+  margin: 0 4px;             /* space between buttons */
+  border-radius: 5px;      /* makes it fully rounded */
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+.movers-toggle:hover {
+  background-color: #005a9e; /* darker blue on hover */
+}
+.movers-toggle-active:hover {
+  background-color: #005a9e; /* darker blue on hover */
+}
+
+.movers-toggle:active {
+  transform: scale(0.95);    /* small click effect */
+}

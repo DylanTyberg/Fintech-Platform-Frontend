@@ -18,20 +18,45 @@
     gap: 10px;
 }
 
-.sidebar a {
-  color: #E0E0E0;
+.sidebar-link {
+  display: block;                 /* makes it behave like a button */
+  color: #E0E0E0;                 /* light text on dark bg */
+  background-color: #3b3b3b;      /* matches your button inactive bg */
+  padding: 10px 16px;             /* vertical + horizontal padding */
+  margin-bottom: 8px;             /* spacing between links */
   text-decoration: none;
-  font-size: 20px;
-  margin-bottom: 1rem;
+  font-size: 18px;
+  border: 1px solid #4a4a4a;     /* subtle border like buttons */
+  border-radius: 4px;             /* slightly rounded corners, rectangular */
+  transition: all 0.2s ease;
+}
+.sidebar-link-active{
+  display: block;                 /* makes it behave like a button */
+  color: #E0E0E0;                 /* light text on dark bg */
+  background-color: #0078d4;      /* matches your button inactive bg */
+  padding: 10px 16px;             /* vertical + horizontal padding */
+  margin-bottom: 8px;             /* spacing between links */
+  text-decoration: none;
+  font-size: 18px;
+  border: 1px solid #005a9e;     /* subtle border like buttons */
+  border-radius: 4px;             /* slightly rounded corners, rectangular */
+  transition: all 0.2s ease;
 }
 
-.sidebar a:hover {
-  
+
+.sidebar-link:hover {
+  background-color: #505050;      /* hover effect */
+  border-color: #606060;          /* slightly lighter border */
+}
+
+.sidebar-link-active:hover {
+  background-color: #005a9e;      /* hover effect */
+  border-color: #606060;          /* slightly lighter border */
 }
 
 .main-content {
   flex: 1;
-  background-color: #121212;
+  background-color: #181818;
   padding: 2rem;
   overflow-y: auto;
 }

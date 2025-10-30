@@ -1,0 +1,53 @@
+/* stock-change.css */
+
+/* Flex container for aligning caret and percentage */
+.stock-change-container {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+/* The triangle caret */
+.stock-caret {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  margin-right: 6px;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Triangle pointing up for positive change */
+.stock-caret.up {
+  border-bottom: 15px solid green;  /* Triangle pointing up */
+}
+
+/* Triangle pointing down for negative change */
+.stock-caret.down {
+  border-top: 15px solid red;  /* Triangle pointing down */
+}
+
+/* Neutral state (no triangle) */
+.stock-caret.neutral {
+  border: none;
+}
+
+/* Style the percent change text */
+.stock-change {
+  font-weight: bold;
+}
+
+/* Color the percentage based on the change */
+.stock-change.up {
+  color: green;
+}
+
+.stock-change.down {
+  color: red;
+}
+
+.stock-change.neutral {
+  color: black;
+}
+

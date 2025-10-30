@@ -1,22 +1,114 @@
-.stock-card{
-    background-color: #2f2f2f;
-    height: 80px;
+.stocks-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  gap: 16px;                             /* space between cards */
+  padding: 16px;
+}
 
+.stock-card {
+  position: relative;                    /* for positioning symbol */
+  background-color: #3b3b3b;             /* dark card background */
+  color: #E0E0E0;                        /* light text */
+  border: 1px solid #4a4a4a;             /* subtle border */
+  border-radius: 8px;                     /* slightly rounded corners */
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 150px;                          /* fixed height, adjust as needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
 
+.stock-card:hover {
+  background-color: #505050;
+  border-color: #606060;
 }
-.stock-card:hover{
-    cursor: pointer;
-    transform: scale(1.03);
+
+.stock-symbol {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 16px;
+  font-weight: bold;
 }
-.stock-name{
-    font-family: 'Inter', sans-serif;
-    font-weight: 600; /* semi-bold */
-    margin-top: 15px;
-    margin-left: 30px;
+
+.stock-name {
+  font-size: 20px;
+  font-weight: 600;
 }
-.stocks-list{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 50px;
+.input-fields {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;                 /* space between the filter input and form */
+  margin-bottom: 24px;       /* spacing from the stock grid */
+  flex-wrap: wrap;            /* responsive wrap for smaller screens */
+}
+
+.filter-stocks {
+  background-color: #3b3b3b;
+  color: #E0E0E0;
+  border: 1px solid #4a4a4a;
+  width: 25%;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 16px;
+  outline: none;
+  flex: 1;                    /* grows to fill available space */
+  transition: all 0.2s ease;
+}
+
+.filter-stocks::placeholder {
+  color: #aaaaaa;
+}
+
+.filter-stocks:focus {
+  background-color: #505050;
+  border-color: #0078d4;
+}
+
+.search-symbol-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;                  /* space between input and button */
+}
+
+.search-symbol {
+  background-color: #3b3b3b;
+  color: #E0E0E0;
+  border: 1px solid #4a4a4a;
+  width: 32%;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-symbol::placeholder {
+  color: #aaaaaa;
+}
+
+.search-symbol:focus {
+  background-color: #505050;
+  border-color: #0078d4;
+}
+
+.search-symbol-submit {
+  background-color: #0078d4;   /* accent blue like active buttons */
+  color: #ffffff;
+  border: 1px solid #005a9e;  /* darker border for depth */
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-symbol-submit:hover {
+  background-color: #005a9e;
+  border-color: #004080;
 }

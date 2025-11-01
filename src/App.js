@@ -9,11 +9,17 @@ import StockDetails from './Stock-details/stock-details';
 import Movers from './Market/movers/movers';
 import Sectors from './Market/Sectors/sectors';
 import News from './Market/News/news';
+import SignUp from './Authentication/SignUp/SignUp';
+import ConfirmEmail from './Authentication/SignUp/confirmEmail';
+import PortfolioSidebar from './Portfolio/PortfolioSidebar/PortfolioSidebar';
+import Watchlist from './Portfolio/Watchlist/watchlist';
 
 function App() {
   return (
     <Routes>
       <Route path="sign-in" element={<SignIn/>}/>
+      <Route path='confirm-email' element={<ConfirmEmail/>}/>
+      <Route path="sign-up" element={<SignUp/>}/>
       <Route path="/" element={<NavigationBar />}>
         <Route path="/" element={<Sidebar />}>
           <Route index element={<Indices/>}/>
@@ -21,6 +27,10 @@ function App() {
           <Route path="/movers" element={<Movers/>}/>
           <Route path="/sectors" element={<Sectors/>}/>
           <Route path="/overview" element={<Indices/>}/>
+        </Route>
+          <Route path="/portfolio" element={<PortfolioSidebar />}>
+          <Route index element={<Watchlist/>}/>
+          
         </Route>
         <Route path="stock-details/:symbol" element={<StockDetails />}/>
       </Route>

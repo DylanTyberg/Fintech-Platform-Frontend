@@ -7,23 +7,23 @@
 
 .stock-card {
   position: relative;                    /* for positioning symbol */
-  background-color: #3b3b3b;             /* dark card background */
+  background-color: #22262e;             /* dark card background */
   color: #E0E0E0;                        /* light text */
-  border: 1px solid #4a4a4a;             /* subtle border */
+  border: 1px solid #3a404a;             /* subtle border */
   border-radius: 8px;                     /* slightly rounded corners */
   padding: 16px;
   cursor: pointer;
   transition: all 0.2s ease;
-  height: 150px;                          /* fixed height, adjust as needed */
+  min-height: 100px;                          /* fixed height, adjust as needed */
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
+  text-align: left;
 }
 
 .stock-card:hover {
-  background-color: #505050;
-  border-color: #606060;
+  background-color: #2a2f38;
+  border-color: #3a404a;
 }
 
 .stock-symbol {
@@ -48,9 +48,9 @@
 }
 
 .filter-stocks {
-  background-color: #3b3b3b;
+  background-color: #2a2f38;
   color: #E0E0E0;
-  border: 1px solid #4a4a4a;
+  border: 1px solid #3a404a;
   width: 25%;
   border-radius: 8px;
   padding: 10px 16px;
@@ -65,8 +65,8 @@
 }
 
 .filter-stocks:focus {
-  background-color: #505050;
-  border-color: #0078d4;
+  background-color: #2a2f38;
+  border-color: #0EA5E9 ;
 }
 
 .search-symbol-form {
@@ -77,9 +77,9 @@
 }
 
 .search-symbol {
-  background-color: #3b3b3b;
+  background-color: #2a2f38;
   color: #E0E0E0;
-  border: 1px solid #4a4a4a;
+  border: 1px solid #3a404a;
   width: 32%;
   border-radius: 8px;
   padding: 10px 16px;
@@ -93,12 +93,12 @@
 }
 
 .search-symbol:focus {
-  background-color: #505050;
-  border-color: #0078d4;
+  background-color: #2a2f38;
+  border-color: #0EA5E9  ;
 }
 
 .search-symbol-submit {
-  background-color: #0078d4;   /* accent blue like active buttons */
+  background-color: #0EA5E9  ;   /* accent blue like active buttons */
   color: #ffffff;
   border: 1px solid #005a9e;  /* darker border for depth */
   border-radius: 8px;
@@ -109,6 +109,6 @@
 }
 
 .search-symbol-submit:hover {
-  background-color: #005a9e;
+  background-color: #0EA5E9  ;
   border-color: #004080;
 }

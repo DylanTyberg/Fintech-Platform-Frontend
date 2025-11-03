@@ -1,107 +1,117 @@
-.nav-bar{
+/* Main navbar container */
+.nav-bar {
+  background-color: #1a1d23;
+  border-bottom: 1px solid #2d323b;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 60px;
   display: flex;
-    
-}
-.links{
-    width: 100%;
-    height: 50px;
-    background-color: #242424;
-    color: white;
-    display: flex;
-    gap: 60px;
-    align-items: center;
-    justify-content: center;
-    
-}
-.sign-in-button{
-    width: 5%;
-    height: 50px;
-    background-color: #242424;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-a {
-    color: white;
-    text-decoration: none;
+  align-items: center;
+  justify-content: space-between;      /* KEY: space-between for left/center/right */
+  padding: 0 24px;
 }
 
+/* LEFT spacer (empty, pushes center content to middle) */
+.nav-spacer {
+  flex: 1;                              /* Takes up left space */
+}
+
+/* CENTER - main navigation links */
+.links {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* RIGHT - auth buttons container */
+.sign-in-button {
+  flex: 1;                              /* Takes up right space */
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-end;            /* Pushes buttons to right edge */
+}
+
+/* Navigation link styles */
 .navbar-link {
-  display: block;                 /* makes it behave like a button */
-  color: #E0E0E0;                 /* light text on dark bg */
-  background-color: #3b3b3b;      /* matches your button inactive bg */
-  padding: 6px 16px;             /* vertical + horizontal padding */
-  margin-bottom: 8px;             /* spacing between links */
-  margin-top: 8px;
+  color: #9CA3AF;
+  background-color: transparent;
+  padding: 8px 16px;
   text-decoration: none;
-  font-size: 18px;
-  border: 1px solid #4a4a4a;     /* subtle border like buttons */
-  border-radius: 4px;             /* slightly rounded corners, rectangular */
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 6px;
   transition: all 0.2s ease;
+  border: 1px solid transparent;
 }
-.navbar-link-active{
-  display: block;                 /* makes it behave like a button */
-  color: #E0E0E0;                 /* light text on dark bg */
-  background-color: #0078d4;      /* matches your button inactive bg */
-  padding: 6px 16px;             /* vertical + horizontal padding */
-  margin-bottom: 8px;             /* spacing between links */
-  margin-top: 8px;           /* spacing between links */
-  text-decoration: none;
-  font-size: 18px;
-  border: 1px solid #005a9e;     /* subtle border like buttons */
-  border-radius: 4px;             /* slightly rounded corners, rectangular */
-  transition: all 0.2s ease;
-}
-
 
 .navbar-link:hover {
-  background-color: #505050;      /* hover effect */
-  border-color: #606060;          /* slightly lighter border */
+  background-color: #2d323b;
+  color: #E5E7EB;
+  border-color: #3a404a;
+}
+
+.navbar-link-active {
+  color: #FFFFFF;
+  background-color: #0EA5E9;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  border: 1px solid #0284C7;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 12px rgba(14, 165, 233, 0.3);
 }
 
 .navbar-link-active:hover {
-  background-color: #005a9e;      /* hover effect */
-  border-color: #606060;          /* slightly lighter border */
+  background-color: #0284C7;
+  border-color: #0369A1;
+  box-shadow: 0 0 16px rgba(14, 165, 233, 0.4);
 }
 
+/* Auth button styles */
 .navbar-link-sign-in {
-  display: block;                 /* makes it behave like a button */
-  color: #E0E0E0;                 /* light text on dark bg */
-  background-color: #3b3b3b;      /* matches your button inactive bg */
-  padding: 6px 16px;             /* vertical + horizontal padding */
-  margin-bottom: 8px;             /* spacing between links */
-  margin-top: 8px;
-  position: absolute;
-  margin-left: 75%;
+  color: #E0E0E0;
+  background-color: #2d323b;
+  padding: 8px 20px;
   text-decoration: none;
-  font-size: 18px;
-  border: 1px solid #4a4a4a;     /* subtle border like buttons */
-  border-radius: 4px;             /* slightly rounded corners, rectangular */
+  font-size: 15px;
+  font-weight: 500;
+  border: 1px solid #3a404a;
+  border-radius: 6px;
   transition: all 0.2s ease;
 }
+
 .navbar-link-sign-in:hover {
-  background-color: #505050;      /* hover effect */
-  border-color: #606060;          /* slightly lighter border */
+  background-color: #3a404a;
+  border-color: #4a5462;
+  color: #FFFFFF;
 }
 
 .navbar-link-sign-up {
-  display: block;                 /* makes it behave like a button */
-  color: #E0E0E0;                 /* light text on dark bg */
-  background-color: #3b3b3b;      /* matches your button inactive bg */
-  padding: 6px 16px;             /* vertical + horizontal padding */
-  margin-bottom: 8px;             /* spacing between links */
-  margin-top: 8px;
-  position: absolute;
-  margin-left: 90%;
+  color: #FFFFFF;
+  background-color: #0EA5E9;
+  padding: 8px 20px;
   text-decoration: none;
-  font-size: 18px;
-  border: 1px solid #4a4a4a;     /* subtle border like buttons */
-  border-radius: 4px;             /* slightly rounded corners, rectangular */
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid #0284C7;
+  border-radius: 6px;
   transition: all 0.2s ease;
+  box-shadow: 0 0 12px rgba(14, 165, 233, 0.3);
 }
+
 .navbar-link-sign-up:hover {
-  background-color: #505050;      /* hover effect */
-  border-color: #606060;          /* slightly lighter border */
+  background-color: #0284C7;
+  border-color: #0369A1;
+  box-shadow: 0 0 16px rgba(14, 165, 233, 0.4);
+}
+
+a {
+  color: white;
+  text-decoration: none;
 }

@@ -21,7 +21,7 @@ const IntradayChart = ({ data, height, width }) => {
         width:  width,
         height: height,
         layout: {
-          background: {color: "#2f2f2f"},
+          background: {color: "#22262e"},
           textColor: '#E0E0E0',
         },
         timeScale: {

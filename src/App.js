@@ -13,6 +13,7 @@ import SignUp from './Authentication/SignUp/SignUp';
 import ConfirmEmail from './Authentication/SignUp/confirmEmail';
 import PortfolioSidebar from './Portfolio/PortfolioSidebar/PortfolioSidebar';
 import Watchlist from './Portfolio/Watchlist/watchlist';
+import Overview from './Market/Overview/overview';
 
 function App() {
   return (
@@ -22,11 +23,11 @@ function App() {
       <Route path="sign-up" element={<SignUp/>}/>
       <Route path="/" element={<NavigationBar />}>
         <Route path="/" element={<Sidebar />}>
-          <Route index element={<Indices/>}/>
+          <Route index element={<Overview/>}/>
           <Route path="/all-stocks" element={<AllStocks/>}/>
           <Route path="/movers" element={<Movers/>}/>
           <Route path="/sectors" element={<Sectors/>}/>
-          <Route path="/overview" element={<Indices/>}/>
+          <Route path="/indices" element={<Indices/>}/>
         </Route>
           <Route path="/portfolio" element={<PortfolioSidebar />}>
           <Route index element={<Watchlist/>}/>

@@ -8,6 +8,7 @@ const NavigationBar = () => {
     return (
         <Fragment >
             <div className="nav-bar">
+                <div className="nav-spacer"></div>
                 <div className="links">
                     <Link className={!location.pathname.startsWith("/portfolio") ? "navbar-link-active" : "navbar-link"} to="/">
                         Market
@@ -16,6 +17,9 @@ const NavigationBar = () => {
                     <Link className={location.pathname.startsWith("/portfolio") ? "navbar-link-active" : "navbar-link"} to="/portfolio">
                         Portfolio
                     </Link>
+
+                </div>
+                <div className="sign-in-button">
                     <Link className={"navbar-link-sign-in"} to="/sign-in">
                         Log In
                     </Link>

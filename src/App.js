@@ -15,7 +15,12 @@ import PortfolioSidebar from './Portfolio/PortfolioSidebar/PortfolioSidebar';
 import Watchlist from './Portfolio/Watchlist/watchlist';
 import Overview from './Market/Overview/overview';
 
+import ProtectedRoute from './Components/ProtectedRoute';
+import { useUser } from './Contexts/UserContext';
+
 function App() {
+  const {state} = useUser();
+
   return (
     <Routes>
       <Route path="sign-in" element={<SignIn/>}/>
@@ -29,7 +34,11 @@ function App() {
           <Route path="/sectors" element={<Sectors/>}/>
           <Route path="/indices" element={<Indices/>}/>
         </Route>
-          <Route path="/portfolio" element={<PortfolioSidebar />}>
+          <Route path="/portfolio" element={
+            <ProtectedRoute>
+              <PortfolioSidebar />
+            </ProtectedRoute>
+          }>
           <Route index element={<Watchlist/>}/>
           
         </Route>

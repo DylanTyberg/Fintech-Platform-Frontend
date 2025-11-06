@@ -66,7 +66,7 @@ const Overview = () => {
                                 <span className="card-symbol">{stock.symbol}</span>
                             </div>
                             <div className="sparkline">
-                                <Sparklines data={stock.prices} width={100} height={30} > 
+                                <Sparklines data={stock.prices} width={300} height={90} > 
                                     <SparklinesLine color={stock.percentChange >= 0 ? "#10B981" : "#EF4444"} />
                                 </Sparklines>
                             </div>
@@ -91,7 +91,7 @@ const Overview = () => {
                             </div>
                             
                             <div className="sparkline">
-                                <Sparklines data={stock.prices} width={100} height={30}> 
+                                <Sparklines data={stock.prices} width={300} height={90}> 
                                     <SparklinesLine color={stock.percentChange >= 0 ? "#10B981" : "#EF4444"} />
                                 </Sparklines>
                             </div>

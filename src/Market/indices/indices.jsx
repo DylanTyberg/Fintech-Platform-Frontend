@@ -74,7 +74,7 @@ const Indices = () => {
     }, [])
     
     return (
-        <div>
+        <div >
             <h1 className="chart-date">{date.toLocaleDateString("en-US", { month: "long", day: "numeric", weekday: "long"})}</h1>
             
             <div className="indices-list">

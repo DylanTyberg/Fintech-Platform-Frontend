@@ -1,45 +1,87 @@
-.indices-list{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    
+
+/* Add or update the parent container */
+.indices-page {
+    padding: 24px;
+    max-width: 1600px; /* ADDED: Controls max width */
+    margin: 0 auto; /* ADDED: Centers the content */
+    width: 100%; /* ADDED */
 }
-.indices-stock-chart{
+
+.indices-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* CHANGED: 3 columns for large monitors */
+    gap: 24px; /* INCREASED: More space between cards */
+    width: 100%; /* ADDED */
+}
+
+.indices-stock-chart {
     background-color: #22262e;
     display: flex;
     flex-direction: column;
-    width: 90%;
+    width: 90%; 
     justify-content: center;
     gap: 0;
-    margin-top: 30px;
-    margin-bottom: 20px;
     font-family: 'Inter', sans-serif;
-    font-weight: 600; /* semi-bold */
-    margin-left: 8%;
-    border-radius: 5px;
+    font-weight: 600;
+    border-radius: 8px;
     position: relative;
+    border: 1px solid #3a404a;
+    padding: 16px;
+    transition: all 0.2s ease;
+    min-width: 0; /* ADDED: Prevents overflow */
 }
-.indices-stock-chart:hover{
+
+.indices-stock-chart:hover {
     cursor: pointer;
-    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.2);
+    transform: translateY(-2px);
+    border-color: #0EA5E9;
 }
-.index-page-change{
+
+.index-page-change {
     position: absolute;
     top: 15px;
     right: 15px;
 }
 
-.title-date{
+.title-date {
     display: flex;
     flex-direction: column;
 }
-.chart-title{
+
+.chart-title {
     margin-left: 20px;
 }
-.chart-date{
-    margin-left: 4%;
-    margin-top: 0px;
-}
-.chart{
-    margin-left: 20px;
+
+.chart-date {
+    margin-top: 20px;
     margin-bottom: 20px;
+}
+
+.chart {
+    width: 100%; /* ADDED */
+    height: 250px; /* ADDED: Fixed height for charts */
+}
+
+/* Responsive breakpoints */
+@media (min-width: 1920px) {
+    .indices-list {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns on very large screens */
+    }
+}
+
+@media (max-width: 1400px) {
+    .indices-list {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    }
+}
+
+@media (max-width: 900px) {
+    .indices-list {
+        grid-template-columns: 1fr; /* 1 column on tablets/mobile */
+    }
+    
+    .indices-page {
+        padding: 16px;
+    }
 }

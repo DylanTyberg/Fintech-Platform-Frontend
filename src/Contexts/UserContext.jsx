@@ -7,7 +7,10 @@ const savedState = JSON.parse(localStorage.getItem("userState"));
 
 const initialState = savedState || {
     user: null,
-    watchlist: []
+    watchlist: [],
+    holdings: [],
+    trades: [],
+    cash: 0,
 }
 
 
@@ -18,15 +21,32 @@ const userReducer = (state, action) => {
             return {...state, user: action.payload};
         case "SET_WATCHLIST":
             return {...state, watchlist: action.payload};
+        case "SET_HOLDINGS":
+            return {...state, holdings: action.payload};        
         case "ADD_TO_WATCHLIST":
             const newSet = new Set(state.watchlist);
             newSet.add(action.payload);
             return { ...state, watchlist: Array.from(newSet) };
+        case "ADD_TO_HOLDINGS":
+            const holding = state.holdings.filter(item => item.symbol === action.payload.symbol);
+            if (holding.length > 0){
+                const newHolding = {
+                    "symbol": holding[0].symbol,
+                    "quantity": holding[0].quantity + action.payload.quantity,
+                }
+                const oldHoldings = state.holdings.filter(item => item.symbol !== action.payload.symbol);
+                const finalHoldings = [...oldHoldings, newHolding]
+                return {...state, holdings: finalHoldings}
+            }
+
+            const finalHoldings = [...state.holdings, action.payload]
+            return {...state, holdings: finalHoldings};
         case "REMOVE_FROM_WATCHLIST":
             return {
                 ...state,
                 watchlist: state.watchlist.filter(item => item.id !== action.payload)
             };
+        
         case "LOGOUT":
             return { ...initialState};
         default:

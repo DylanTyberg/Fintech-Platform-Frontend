@@ -33,6 +33,16 @@ const SignIn = () => {
                     }
                 })
 
+                // const userItems = //todo
+
+                // dispatch({type: "SET_WATCHLIST",
+                //     payload: userItems.watchlist,
+                // })
+
+                // dispatch({type: "SET_HOLDINGS",
+                //     payload: userItems.holdings,
+                // })
+
                 
                 navigate('/');
 

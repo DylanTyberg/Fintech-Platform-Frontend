@@ -66,9 +66,22 @@ const Watchlist = () => {
         setStocksToAdd([...newList, stock.Symbol]);
     }
 
+    const updateDynamo = (stocks) => {
+        for (const stock of stocks) {
+            const params = {
+                user: state.user.userId,
+                type: "watchlist",
+                symbol: stock.symbol
+            }
+
+            //todo
+        }
+    }
+
     const handleStocksAdd =  (e) => {
         e.preventDefault();
         getData(stocksToAdd);
+        updateDynamo(stocksToAdd);
 
     }
 

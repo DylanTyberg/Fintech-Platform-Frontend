@@ -1,0 +1,398 @@
+/* Watchlist Container */
+.watchlist-container {
+  padding: 24px;
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers children horizontally */
+}
+
+/* Empty State Message */
+.watchlist-container h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #6B7280;
+  text-align: center;
+  margin: 60px 0;
+}
+
+/* Watchlist Grid */
+.indices-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* Add to Watchlist Button */
+.watchlist-container > button {
+  background-color: #0EA5E9;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+}
+
+.watchlist-container > button:hover {
+  background-color: #0284C7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+}
+
+.watchlist-container > button:active {
+  transform: translateY(0);
+}
+
+/* Backdrop Overlay (blur background when form is active) */
+.form-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Add Stocks Form */
+.add-stocks-form {
+  background-color: #1a1d23;
+  border: 1px solid #2d323b;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1000;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form Header */
+.add-stocks-button {
+  font-size: 28px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 24px 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #2d323b;
+}
+
+/* Selected Stocks Container - Vertical Layout */
+.stocks-to-add {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  min-height: 60px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 12px;
+  background-color: #22262e;
+  border-radius: 8px;
+  border: 1px solid #3a404a;
+}
+
+.stocks-to-add:empty::before {
+  content: 'No stocks selected yet';
+  color: #6B7280;
+  font-size: 14px;
+  text-align: center;
+  display: block;
+  padding: 20px 0;
+}
+
+/* Custom Scrollbar for Stocks to Add */
+.stocks-to-add::-webkit-scrollbar {
+  width: 8px;
+}
+
+.stocks-to-add::-webkit-scrollbar-track {
+  background: #1a1d23;
+  border-radius: 4px;
+}
+
+.stocks-to-add::-webkit-scrollbar-thumb {
+  background: #3a404a;
+  border-radius: 4px;
+}
+
+.stocks-to-add::-webkit-scrollbar-thumb:hover {
+  background: #4a505a;
+}
+
+/* Stock Tag in Selected List - Vertical */
+.stocks-to-add .stock-form-card {
+  background-color: #2a2f38;
+  border: 1px solid #3a404a;
+  color: #FFFFFF;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: default;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.stocks-to-add .stock-form-card:hover {
+  background-color: #32373f;
+  border-color: #4a505a;
+}
+
+.stocks-to-add .stock-form-card h1 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  flex-grow: 1;
+}
+
+/* Remove Button (X) */
+.remove-stock-btn {
+  background: none;
+  border: none;
+  color: #EF4444;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.remove-stock-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  transform: scale(1.1);
+}
+
+.remove-stock-btn:active {
+  transform: scale(0.95);
+}
+
+/* Search Input */
+.search-add-stocks {
+  width: 100%;
+  background-color: #22262e;
+  border: 1px solid #3a404a;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 16px;
+  color: #FFFFFF;
+  margin-bottom: 12px;
+  transition: all 0.2s ease;
+}
+
+.search-add-stocks::placeholder {
+  color: #6B7280;
+}
+
+.search-add-stocks:focus {
+  outline: none;
+  border-color: #0EA5E9;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+/* Add Button */
+.add-button {
+  width: 100%;
+  background-color: #22262e;
+  color: #FFFFFF;
+  border: 1px solid #0EA5E9;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 16px;
+}
+
+.add-button:hover {
+  background-color: #0EA5E9;
+  transform: translateY(-1px);
+}
+
+/* Filtered Stocks List */
+.filtered-stocks-list {
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #22262e;
+  border: 1px solid #3a404a;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.filtered-stocks-list:empty {
+  display: none;
+}
+
+.filtered-stocks-list .stock-form-card {
+  background-color: transparent;
+  color: #FFFFFF;
+  width: 100%;
+  border-radius: 0;
+  border-bottom: 1px solid #3a404a;
+  padding: 12px 16px;
+  justify-content: flex-start;
+  cursor: pointer;
+}
+
+.filtered-stocks-list .stock-form-card:last-child {
+  border-bottom: none;
+}
+
+.filtered-stocks-list .stock-form-card:hover {
+  background-color: #2a2f38;
+  transform: none;
+}
+
+.filtered-stocks-list .stock-form-card h1 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+/* Custom Scrollbar for Filtered List */
+.filtered-stocks-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.filtered-stocks-list::-webkit-scrollbar-track {
+  background: #1a1d23;
+  border-radius: 4px;
+}
+
+.filtered-stocks-list::-webkit-scrollbar-thumb {
+  background: #3a404a;
+  border-radius: 4px;
+}
+
+.filtered-stocks-list::-webkit-scrollbar-thumb:hover {
+  background: #4a505a;
+}
+
+/* Form Save Button */
+.form-save-button {
+  width: 100%;
+  background-color: #10B981;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.form-save-button:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.form-save-button:active {
+  transform: translateY(0);
+}
+
+.add-to-watchlist-button {
+  background-color: #22262e;
+  color: #FFFFFF;
+  border: 1px solid #3a404a;
+  border-radius: 8px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
+  font-family: 'Inter', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  
+}
+
+.add-to-watchlist-button:hover {
+  background-color: #2a2f38;
+  border-color: #0EA5E9;
+  color: #0EA5E9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+}
+
+.add-to-watchlist-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .indices-list {
+    grid-template-columns: 1fr;
+  }
+
+  .add-stocks-form {
+    padding: 24px;
+    max-height: 95vh;
+  }
+
+  .add-stocks-button {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .watchlist-container {
+    padding: 16px;
+  }
+
+  .add-stocks-form {
+    padding: 20px;
+  }
+}

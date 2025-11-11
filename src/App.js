@@ -14,6 +14,7 @@ import ConfirmEmail from './Authentication/SignUp/confirmEmail';
 import PortfolioSidebar from './Portfolio/PortfolioSidebar/PortfolioSidebar';
 import Watchlist from './Portfolio/Watchlist/watchlist';
 import Overview from './Market/Overview/overview';
+import TradeSimulator from './Portfolio/TradeSimulator/TradeSimulator';
 
 import ProtectedRoute from './Components/ProtectedRoute';
 import { useUser } from './Contexts/UserContext';
@@ -40,6 +41,7 @@ function App() {
             </ProtectedRoute>
           }>
           <Route index element={<Watchlist/>}/>
+          <Route path="trade-simulator" element={<TradeSimulator/>}/>
           
         </Route>
         <Route path="stock-details/:symbol" element={<StockDetails />}/>

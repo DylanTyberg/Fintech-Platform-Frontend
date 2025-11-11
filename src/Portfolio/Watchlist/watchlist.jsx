@@ -2,6 +2,7 @@ import { useUser } from "../../Contexts/UserContext";
 import { useEffect, useState } from "react";
 import popularStocks from "../../s&p500stocks.json"
 import StockChartCard from "../../Components/StockChartCard/StockChartCard";
+import "../Watchlist/watchlist.css"
 
 const Watchlist = () => {
     const {state, dispatch} = useUser();
@@ -85,37 +86,74 @@ const Watchlist = () => {
 
     }
 
+    const handleRemoveStock = (remove) => {
+        const newList = stocksToAdd.filter(stock => stock !== remove);
+        setStocksToAdd(newList);
+    }
+
     return (
-        <div>
-            {state.watchlist.length === 0 &&
-            <h1>You have no saved stocks</h1>}
+        <div className="watchlist-container">
+            {state.watchlist.length === 0 && (
+                <h1>You have no saved stocks</h1>
+            )}
+            <button className="add-to-watchlist-button" onClick={() => setAddToWatchlist(true)}>Add Stocks to Watchlist</button>
             <div className="indices-list">
                 {chartData.map((data, i) => (
-                    <StockChartCard symbol={state.watchlist[i]} title={state.watchlist[i]} chartData={data}/>
+                    <StockChartCard 
+                        key={state.watchlist[i]} 
+                        symbol={state.watchlist[i]} 
+                        title={state.watchlist[i]} 
+                        chartData={data}
+                    />
                 ))}
             </div>
-            <button onClick={() => setAddToWatchlist(true)}>Add Stocks to Watchlist</button>
-            <div>
-                {addToWatchlist && 
-                <form onSubmit={handleStocksAdd}>
-                    <h1>Add Stocks</h1>
-                    {stocksToAdd.map((stock) => (
-                        <div>
-                            <h1>{stock}</h1>
+         
+            
+            {addToWatchlist && (
+                <div className="form-backdrop" onClick={(e) => {
+                    if (e.target.className === 'form-backdrop') {
+                        setAddToWatchlist(false);
+                    }
+                }}>
+                    <form className="add-stocks-form" onSubmit={handleStocksAdd} onClick={(e) => e.stopPropagation()}>
+                        <h1 className="add-stocks-button">Add Stocks</h1>
+                        <div className="stocks-to-add">
+                            {stocksToAdd.map((stock) => (
+                                <div key={stock} className="stock-form-card">
+                                    <h1>{stock}</h1>
+                                    <button 
+                                        type="button"
+                                        className="remove-stock-btn"
+                                        onClick={() => handleRemoveStock(stock)}
+                                        aria-label={`Remove ${stock}`}
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                    <input placeholder="Search Populer stocks or enter symbol and submit" onChange={(e) => setFilterValue(e.target.value)}/>
-                    <button >Add</button>
-                    {filterValue.length > 1 && filteredStocks.map((stock) => (
-                        <div onClick={() => handleClickStock(stock)}>
-                            <h1>{stock.Security}</h1>
+                        <input 
+                            className="search-add-stocks" 
+                            placeholder="Search Popular stocks or enter symbol and submit" 
+                            onChange={(e) => setFilterValue(e.target.value)}
+                        />
+                        <button className="add-button" type="button">Add</button>
+                        <div className="filtered-stocks-list">
+                            {filterValue.length > 1 && filteredStocks.map((stock) => (
+                                <div 
+                                    key={stock.Security} 
+                                    className="stock-form-card" 
+                                    onClick={() => handleClickStock(stock)}
+                                >
+                                    <h1>{stock.Security}</h1>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                    <button type="submit">Save</button>
-                </form>
-                }
-            </div>
+                        <button className="form-save-button" type="submit">Save</button>
+                    </form>
+                </div>
+             )}
         </div>
-    )
+            )
 }
 export default Watchlist;

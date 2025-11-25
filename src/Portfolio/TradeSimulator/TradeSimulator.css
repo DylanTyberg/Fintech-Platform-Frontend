@@ -1,0 +1,155 @@
+.simulator-page {
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 90%;
+}
+
+.simulator-values {
+    background-color: #22262e;
+    border: 1px solid #3a404a;
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.simulator-total-value {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+}
+
+.simulator-cash-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+    color: #9ca3af;
+    font-family: 'Inter', sans-serif;
+}
+
+.trade-buttons {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    justify-content: center;
+}
+
+.trade-buttons button {
+    background-color: #0EA5E9;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.trade-buttons button:hover {
+    background-color: #0284c7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
+}
+
+.holdings-table {
+    width: 100%;
+    background-color: #22262e;
+    border: 1px solid #3a404a;
+    border-radius: 8px;
+    border-collapse: collapse;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+.holdings-header {
+    background-color: #1a1d24;
+    border-bottom: 2px solid #3a404a;
+}
+
+.holdings-header .holdings-data {
+    padding: 16px;
+    font-weight: 600;
+    color: #9ca3af;
+    text-align: left;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.holdings-header .holdings-data:first-child {
+    text-align: left;
+}
+
+.holdings-header .holdings-data:not(:first-child) {
+    text-align: right;
+}
+
+.holdings-row {
+    border-bottom: 1px solid #3a404a;
+    transition: background-color 0.2s ease;
+}
+
+.holdings-row:hover {
+    background-color: #2a2f38;
+}
+
+.holdings-row:last-child {
+    border-bottom: none;
+}
+
+.holdings-data {
+    padding: 16px;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.holdings-row .holdings-data:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: #0EA5E9;
+}
+
+.holdings-row .holdings-data:not(:first-child) {
+    text-align: right;
+}
+
+/* Positive/negative styling for gains */
+.positive {
+    color: #10b981;
+}
+
+.negative {
+    color: #ef4444;
+}
+
+/* Responsive design */
+@media (max-width: 900px) {
+    .simulator-page {
+        padding: 16px;
+    }
+    
+    .simulator-total-value {
+        font-size: 2.5rem;
+    }
+    
+    .trade-buttons {
+        flex-direction: column;
+    }
+    
+    .trade-buttons button {
+        width: 100%;
+    }
+    
+    .holdings-table {
+        font-size: 0.875rem;
+    }
+    
+    .holdings-data {
+        padding: 12px 8px;
+    }
+}

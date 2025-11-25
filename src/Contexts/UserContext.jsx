@@ -12,6 +12,14 @@ const initialState = savedState || {
     trades: [],
     cash: 0,
 }
+const logoutState = {
+    user: null,
+    watchlist: [],
+    holdings: [],
+    trades: [],
+    cash: 0,
+}
+
 
 
 
@@ -19,6 +27,8 @@ const userReducer = (state, action) => {
     switch (action.type) {
         case "SET_USER":
             return {...state, user: action.payload};
+        case "SET_CASH":
+            return {...state, cash: action.payload};
         case "SET_WATCHLIST":
             return {...state, watchlist: action.payload};
         case "SET_HOLDINGS":
@@ -48,7 +58,7 @@ const userReducer = (state, action) => {
             };
         
         case "LOGOUT":
-            return { ...initialState};
+            return { ...logoutState};
         default:
             return state;
     }

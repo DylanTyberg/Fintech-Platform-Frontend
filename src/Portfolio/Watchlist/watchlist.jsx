@@ -67,15 +67,38 @@ const Watchlist = () => {
         setStocksToAdd([...newList, stock.Symbol]);
     }
 
-    const updateDynamo = (stocks) => {
+    const updateDynamo = async (stocks) => {
         for (const stock of stocks) {
             const params = {
                 user: state.user.userId,
                 type: "watchlist",
-                symbol: stock.symbol
+                details: stock
+                
             }
+            //console.log("symbol", stock);
 
-            //todo
+            try {
+                const response = await fetch(
+                    "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/user",
+                    {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(params), 
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                console.log(result);
+
+            } catch (error)
+            {
+                console.log(error);
+            }
         }
     }
 

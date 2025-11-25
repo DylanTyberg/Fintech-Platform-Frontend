@@ -33,11 +33,35 @@ const SignIn = () => {
                     }
                 })
 
-                // const userItems = //todo
+                const response = await fetch(
+                    `https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/user?userId=${userAttributes.sub}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        }
+                    }
+                );
 
-                // dispatch({type: "SET_WATCHLIST",
-                //     payload: userItems.watchlist,
-                // })
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const userItems = await response.json()
+
+                
+
+                dispatch({
+                    type: "SET_WATCHLIST",
+                    payload: userItems
+                        .filter(item => item.type?.startsWith("watchlist#"))
+                        .map(item => item.type.split("#")[1]), // Extract symbol after the #
+                });
+
+                dispatch({
+                    type: "SET_CASH",
+                    payload: userItems.find(item => item.type?.startsWith("cash#"))?.amount || 0
+                })
 
                 // dispatch({type: "SET_HOLDINGS",
                 //     payload: userItems.holdings,

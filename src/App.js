@@ -15,6 +15,9 @@ import PortfolioSidebar from './Portfolio/PortfolioSidebar/PortfolioSidebar';
 import Watchlist from './Portfolio/Watchlist/watchlist';
 import Overview from './Market/Overview/overview';
 import TradeSimulator from './Portfolio/TradeSimulator/TradeSimulator';
+import BuyStock from './Portfolio/TradeSimulator/BuyStock/BuyStock';
+import SellStock from './Portfolio/TradeSimulator/SellStock/SellStock';
+import PortfolioAnalytics from './Portfolio/PortfolioAnalytics/PortfolioAnalytics';
 
 import ProtectedRoute from './Components/ProtectedRoute';
 import { useUser } from './Contexts/UserContext';
@@ -42,9 +45,11 @@ function App() {
           }>
           <Route index element={<Watchlist/>}/>
           <Route path="trade-simulator" element={<TradeSimulator/>}/>
-          
+          <Route path="portfolio-analytics" element={<PortfolioAnalytics/>}/>
         </Route>
         <Route path="stock-details/:symbol" element={<StockDetails />}/>
+        <Route path="portfolio/trade-simulator/buy" element={<BuyStock/>}/>
+        <Route path="portfolio/trade-simulator/sell" element={<SellStock/>}/>
       </Route>
     </Routes>
   );

@@ -77,6 +77,7 @@ const StockDetails = () => {
                     )
                     if (result.ok){
                         const data = await result.json();
+                        console.log(data);
                         setStockData(data);
                         const newChartData = data.map(({timestamp, close}) => ({
                             time: Math.floor(new Date(timestamp).getTime() / 1000),

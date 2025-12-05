@@ -12,8 +12,8 @@ const PortfolioSidebar = () => {
         <div className="sidebar-items">
           
           <Link className={location.pathname === "/portfolio" ? "sidebar-link-active" : "sidebar-link"} to="/portfolio">Watchlist</Link>
-          <Link className={location.pathname === "/portfolio/trade-simulator" ? "sidebar-link-active" : "sidebar-link"} to="/portfolio/trade-simulator">Portfolio Value</Link>
-
+          <Link className={location.pathname === "/portfolio/trade-simulator" ? "sidebar-link-active" : "sidebar-link"} to="/portfolio/trade-simulator">Trade Simulator</Link>
+          <Link className={location.pathname === "/portfolio/portfolio-analytics" ? "sidebar-link-active" : "sidebar-link"} to="/portfolio/portfolio-analytics">Portfolio Analytics</Link>
         </div>
       </aside>
 

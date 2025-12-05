@@ -63,9 +63,15 @@ const SignIn = () => {
                     payload: userItems.find(item => item.type?.startsWith("cash#"))?.amount || 0
                 })
 
-                // dispatch({type: "SET_HOLDINGS",
-                //     payload: userItems.holdings,
-                // })
+                dispatch({
+                    type: "SET_HOLDINGS",
+                    payload: userItems
+                        .filter(item => item.type?.startsWith("holding#") && item?.quantity > 0)
+                        .map(item => ({
+                            symbol: item.type.split("#")[1],
+                            quantity: item.quantity,
+                    }))
+                });
 
                 
                 navigate('/');

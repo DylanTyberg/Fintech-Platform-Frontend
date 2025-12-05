@@ -11,6 +11,50 @@ const TradeSimulator = () => {
     const [introForm, setIntroForm] = useState(state.cash === 0);
     const [cashValue, setCashValue] = useState("");
 
+    const [priceInfo, setPriceInfo] = useState([]);
+    const [portfolioValue, setPortfolioValue] = useState(0);
+
+    const getPriceInfo = async () => {
+        try {
+            const response = await fetch(
+                    "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/holdings-prices",
+                    {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ holdings: state.holdings }), 
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                console.log("price info", result);
+                setPriceInfo(result);
+                
+                const holdingsValue = state.holdings.reduce((total, holding) => {
+                    const info = result.find(item => item.symbol === holding.symbol);
+                    const currentPrice = info?.lastPrice.close || 0;
+                    console.log("current", currentPrice)
+                    return total + (holding.quantity * currentPrice);
+                }, 0);
+                console.log("holdings val", holdingsValue)
+                const totalPortfolioValue = holdingsValue + state.cash;
+                setPortfolioValue(totalPortfolioValue.toFixed(2));
+
+            } catch (error)
+            {
+                console.log(error);
+            }
+    }
+    
+
+    useEffect(() => {
+        getPriceInfo();
+    }, [state.holdings, state.cash])
+
 
     const handleCashSubmit = async (e) => {
         e.preventDefault();
@@ -69,34 +113,40 @@ const TradeSimulator = () => {
             </div>
             }
             <div className="simulator-values">
-                <h1 className="simulator-total-value">{/*temporary*/}{state.cash}</h1>
-                <h1 className="simulator-cash-value">Cash: {state.cash}</h1>
+                <h1 className="simulator-total-value">${Number(portfolioValue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h1>
+                <h1 className="simulator-cash-value">Cash: ${Number(state.cash).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h1>
             </div>
             <div className="trade-buttons">
                 <button onClick={() => navigate("buy")}>Buy</button>
-                <button onClick={() => navigate("Sell")}> Sell</button>
+                <button onClick={() => navigate("sell")}> Sell</button>
             </div>
             <div>
                 <table className="holdings-table">
-                    <thead>
-                        <tr className="holdings-header">
-                            <th className="holdings-data">Symbol</th>
-                            <th className="holdings-data">Quantity</th>
-                            <th className="holdings-data">Value</th>
-                            <th className="holdings-data">Change</th>
-                            <th className="holdings-data">Gain</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <thead>
+                    <tr className="holdings-header">
+                        <th className="holdings-data">Symbol</th>
+                        <th className="holdings-data">Quantity</th>
+                        <th className="holdings-data">Share Value</th>
+                        <th className="holdings-data">Today's Change</th>
+                        <th className="holdings-data">Total Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {state.holdings.map((holding) => (
                         <tr className="holdings-row">
-                            <td className="holdings-data">AAPL</td>
-                            <td className="holdings-data">10</td>
-                            <td className="holdings-data">$1,500</td>
-                            <td className="holdings-data">+2.5%</td>
-                            <td className="holdings-data positive">+$50</td>
+                            <td className="holdings-data">{holding.symbol}</td>
+                            <td className="holdings-data">{holding.quantity}</td>
+                            <td className="holdings-data">${priceInfo.length > 0 && priceInfo.find(info => info.symbol === holding.symbol).lastPrice.close.toFixed(2)}</td>
+                            <td className={`holdings-data ${priceInfo.find(info => info.symbol === holding.symbol)?.change >= 0 ? 'positive' : 'negative'}`}>
+                            {priceInfo.length > 0 && priceInfo.find(info => info.symbol === holding.symbol)?.change >= 0 && '+'}
+                            {priceInfo.length > 0 && priceInfo.find(info => info.symbol === holding.symbol)?.change}%
+                            </td>
+                            <td className="holdings-data">${(holding.quantity * (priceInfo.length > 0 && priceInfo.find(info => info.symbol === holding.symbol).lastPrice.close.toFixed(2))).toFixed(2)}</td>
                         </tr>
-                    </tbody>
-                </table>
+                    ))}
+                    
+                </tbody>
+            </table>
             </div>
             <div>
 

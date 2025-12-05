@@ -38,19 +38,44 @@ const userReducer = (state, action) => {
             newSet.add(action.payload);
             return { ...state, watchlist: Array.from(newSet) };
         case "ADD_TO_HOLDINGS":
-            const holding = state.holdings.filter(item => item.symbol === action.payload.symbol);
-            if (holding.length > 0){
-                const newHolding = {
-                    "symbol": holding[0].symbol,
-                    "quantity": holding[0].quantity + action.payload.quantity,
+            const existingIndex = state.holdings.findIndex(item => item.symbol === action.payload.symbol);
+            
+            if (existingIndex >= 0) {
+               
+                const updatedHoldings = [...state.holdings];
+                updatedHoldings[existingIndex] = {
+                ...updatedHoldings[existingIndex],
+                quantity: updatedHoldings[existingIndex].quantity + action.payload.quantity
+                };
+                return { ...state, holdings: updatedHoldings };
                 }
-                const oldHoldings = state.holdings.filter(item => item.symbol !== action.payload.symbol);
-                const finalHoldings = [...oldHoldings, newHolding]
-                return {...state, holdings: finalHoldings}
+            
+
+            return { ...state, holdings: [...state.holdings, action.payload] };
+
+        case "SUBTRACT_FROM_HOLDINGS":
+            const existingHolding = state.holdings.find(item => item.symbol === action.payload.symbol);
+            
+            if (!existingHolding) {
+                return state;
+            }
+            
+            const newQuantity = existingHolding.quantity - action.payload.quantity;
+            
+            if (newQuantity <= 0) {
+                return {
+                ...state,
+                holdings: state.holdings.filter(item => item.symbol !== action.payload.symbol)
+                };
             }
 
-            const finalHoldings = [...state.holdings, action.payload]
-            return {...state, holdings: finalHoldings};
+            const updatedHoldings = state.holdings.map(item =>
+                item.symbol === action.payload.symbol
+                ? { ...item, quantity: newQuantity }
+                : item
+            );
+            
+            return { ...state, holdings: updatedHoldings };
         case "REMOVE_FROM_WATCHLIST":
             return {
                 ...state,

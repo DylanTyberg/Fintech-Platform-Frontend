@@ -3,6 +3,8 @@ import {signIn} from 'aws-amplify/auth';
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../Contexts/UserContext";
 import { fetchUserAttributes } from "aws-amplify/auth";
+import { TradeLoadingState } from "../../Components/LoadingPage/LoadingPage";
+import "./sign-in.css"
 
 
 const SignIn = () => {
@@ -13,12 +15,15 @@ const SignIn = () => {
     const navigate = useNavigate();
 
     const {state, dispatch} = useUser();
+
+    const [isLoading, setIsLoading] = useState(false);
     
 
 
     const handleSignIn = async (e) => {
             e.preventDefault();
             try {
+                setIsLoading(true);
                 await signIn({username, password})
                 setMessage("Sign-in successful!");
                 const userAttributes = await fetchUserAttributes();
@@ -73,21 +78,35 @@ const SignIn = () => {
                     }))
                 });
 
+                dispatch({
+                    type: "SET_SNAPSHOTS",
+                    payload: userItems.filter(item => item.type?.startsWith("snapshot#"))
+                    .map(item => ({
+                        date: item.type.split("#")[1],
+                        portfolioValue: item.totalPortfolioValue,
+                        cash: item.cash,
+                        holdings: item.holdings
+                    }))
+                })
+
                 
                 navigate('/');
 
             } catch (error) {
                 console.log(error)
                 setMessage(error.message);
+            } finally {
+                setIsLoading(false);
             }
         }
 
     return (
         <div className="sign-up-page">
             <form className="sign-up-form" onSubmit={handleSignIn}>
+                
                 <input className="username-field" type='text' placeholder="Enter email" required onChange={(e) => {setUsername(e.target.value)}}/>
                 <input className="password-field" type='password' placeholder="Enter Password" required onChange={(e) => {setPassword(e.target.value)}}/>
-                <button className="submit-button" type='submit'>Sign In</button>
+                {isLoading ? <div className="sign-in-loading"><TradeLoadingState size={20}/></div> : <button className="submit-button" type='submit'>Sign In</button>}
             </form>
         </div>
     )

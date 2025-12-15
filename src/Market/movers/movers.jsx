@@ -1,12 +1,15 @@
 import "../movers/movers.css";
 import { useEffect, useState } from "react";
 import StockChange from "../../Components/stock-change/stock-change";
+import LoadingSpinner from "../../Components/LoadingPage/LoadingPage";
 
 const Movers = () => {
   const [gainers, setGainers] = useState([]);
   const [losers, setLosers] = useState([]);
   const [active, setActive] = useState([]);
   const [isGainers, setIsGainers] = useState(true);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const isMarketOpen = () => {
     const now = new Date();
@@ -24,6 +27,7 @@ const Movers = () => {
 
   const getMovers = async () => {
     try {
+      setIsLoading(true);
       if (isMarketOpen()) {
         // Trigger backend to refresh movers
         const postResponse = await fetch(
@@ -58,6 +62,8 @@ const Movers = () => {
 
     } catch (error) {
       console.error("Error fetching movers:", error);
+    } finally{
+      setIsLoading(false);
     }
   };
 
@@ -65,6 +71,10 @@ const Movers = () => {
   useEffect(() => {
     getMovers();
   }, []);
+
+  if (isLoading) {
+    return <LoadingSpinner message="Loading movers data..." />
+  }
 
   return (
     <div className="movers-page">

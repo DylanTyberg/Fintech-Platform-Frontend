@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { Sparklines, SparklinesLine} from 'react-sparklines';
 import "../Overview/overview.css"
 import StockChange from "../../Components/stock-change/stock-change";
+import LoadingSpinner from "../../Components/LoadingPage/LoadingPage";
 
 const Overview = () => {
     const [indexData, setIndexData] = useState([]);
     const [sectorData, setSectorData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const navigate = useNavigate();
 
@@ -30,6 +32,7 @@ const Overview = () => {
 
     const getSparklineData = async () => {
         try {
+            setIsLoading(true);
             const response = await fetch(`https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/sparkline-market`,
                 {
                     method: "GET",
@@ -42,6 +45,8 @@ const Overview = () => {
         } catch (error)
         {
             console.log(error)
+        }finally {
+            setIsLoading(false); 
         }
     }
 
@@ -49,8 +54,14 @@ const Overview = () => {
         getSparklineData();
     }, [])
 
+    if (isLoading) {
+        return <LoadingSpinner message="Loading market data..." />;
+    }
+
+
     return (
         <div className="overview-page">
+            
             <div className="index-overview">
                 <h1 className="overview-header">
                     Indices

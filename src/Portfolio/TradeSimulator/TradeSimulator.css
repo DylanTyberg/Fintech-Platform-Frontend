@@ -137,6 +137,133 @@
     color: #ef4444;
 }
 
+.ai-insights{
+    width: 100%;
+    background: linear-gradient(
+  180deg,
+  #2f3f5a 0%,
+  #222c3a 50%,
+  #1a2230 100%
+);
+    border: 1px solid #3a404a;
+    border-radius: 8px;
+    border-collapse: collapse;
+    font-family: 'Inter', sans-serif;
+    margin-top: 30px;
+    max-height: 380px;     /* desktop sweet spot */
+    overflow-y: auto;
+}
+
+.insight-text {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: #e5e7eb;
+  margin-left: 25px;
+
+  /* background (optional, if this is the summary card itself) */
+  background: linear-gradient(180deg, #2f3f5a, #222c3a, #1a2230);
+  padding: 18px 22px;
+  border-radius: 12px;
+}
+.insight-text p {
+  margin: 0 0 12px;
+}
+.insight-text h1,
+.insight-text h2,
+.insight-text h3 {
+  margin: 18px 0 10px;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.insight-text h4 {
+  font-weight: 500;
+  color: #c7d2fe;
+}
+
+.insight-text strong {
+  font-weight: 500;
+  color: #f8fafc;
+}
+
+.insight-text em {
+  color: #c7d2fe;
+}
+.insight-text ul,
+.insight-text ol {
+  padding-left: 18px;
+  margin: 10px 0;
+}
+
+.insight-text li {
+  margin-bottom: 6px;
+}
+
+.ai-insights-header {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13px;              /* small, intentional */
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  color: #93c5fd;               /* soft AI blue */
+  margin-left: 25px;
+  margin-top: 10px;
+}
+
+.insight-option-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.insight-option-button {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+
+  padding: 8px 14px;
+  border-radius: 10px;
+
+  color: #e5e7eb;
+  background: linear-gradient(
+    135deg,
+    rgba(96,165,250,0.18),
+    rgba(59,130,246,0.08)
+  );
+
+  border: 1px solid rgba(96,165,250,0.35);
+  margin-top: 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+
+  transition: all 0.18s ease;
+}
+
+.insight-option-button:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(96,165,250,0.3),
+    rgba(59,130,246,0.15)
+  );
+  border-color: rgba(96,165,250,0.6);
+  transform: translateY(-1px);
+}
+
+.insight-option-button:active {
+  transform: translateY(0);
+  background: rgba(96,165,250,0.25);
+}
+.insight-option-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.4);
+}
+
+
+
 /* Responsive design */
 @media (max-width: 900px) {
     .simulator-page {

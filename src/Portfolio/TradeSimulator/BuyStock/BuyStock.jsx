@@ -2,6 +2,7 @@ import { useUser } from "../../../Contexts/UserContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../BuyStock/BuyStock.css"
+import { TradeLoadingState } from "../../../Components/LoadingPage/LoadingPage";
 
 const BuyStock = () => {
     const {state, dispatch} = useUser();
@@ -15,8 +16,12 @@ const BuyStock = () => {
     const [selectedStock, setSelectedStock] = useState(null);
     const [error, setError] = useState("");
 
+    const [isFocused, setIsFocused] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleStockSearch = async () => {
         try {
+            setIsLoading(true);
             const response = await fetch(
                 `https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/latest?symbol=${symbol}`,
                 {
@@ -30,6 +35,8 @@ const BuyStock = () => {
             setSelectedStock(result);
         } catch (error) {
             console.log(error)
+        } finally {
+            setIsLoading(false);
         }
        
     };
@@ -134,20 +141,24 @@ const BuyStock = () => {
             <div className="buy-container">
                 <div className="buy-header">
                     <h1>Buy Stock</h1>
-                    <button className="close-button" onClick={() => navigate("/trade-simulator")}>
+                    <button className="close-button" onClick={() => navigate("/portfolio/trade-simulator")}>
                         ✕
                     </button>
                 </div>
 
                 <div className="stock-search-section">
-                    <label>Search Stock</label>
+                    <label>{!isFocused ? "Search Stock" : "Click Outside Text Box to fetch price"}</label>
                     <input
                         type="text"
                         className="stock-search-input"
                         placeholder="Enter symbol (e.g., AAPL)"
                         value={symbol}
                         onChange={(e) => setSymbol(e.target.value.toUpperCase())}
-                        onBlur={handleStockSearch}
+                        onFocus={() => setIsFocused(true)}  
+                        onBlur={(e) => {
+                            setIsFocused(false);  
+                            handleStockSearch(e); 
+                        }}
                     />
                 </div>
 
@@ -182,7 +193,7 @@ const BuyStock = () => {
                         </div>
                         <div className="summary-row">
                             <span>Price per share:</span>
-                            <span>${selectedStock?.close?.toFixed(2) || '0.00'}</span>
+                            {isLoading ? <TradeLoadingState size={10}/> : <span>${selectedStock?.close?.toFixed(2) || '0.00'}</span>}
                         </div>
                         <div className="summary-row total">
                             <span>Total Cost:</span>

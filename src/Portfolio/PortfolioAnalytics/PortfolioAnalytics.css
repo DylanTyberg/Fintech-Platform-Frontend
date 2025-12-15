@@ -1,0 +1,152 @@
+.analytics-page {
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+}
+
+.analytics-section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 24px 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.history-chart-container {
+    background: #22262e;
+    border: 1px solid #3a404a;
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+    width: 100%;
+    max-width: 1000px;
+}
+
+.history-chart {
+    
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.pie-chart-section {
+    background: #22262e;
+    border: 1px solid #3a404a;
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+    max-width: 1000px;
+}
+
+.pie-chart {
+    margin-bottom: 24px;
+    height: 400px;
+    width: 100%;
+}
+
+.ai-insight {
+    background: linear-gradient(135deg, #0EA5E9 0%, #0284c7 100%);
+    border-radius: 8px;
+    padding: 20px 24px;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.2);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.ai-insight:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(14, 165, 233, 0.3);
+}
+
+/* Recharts customization to match dark theme */
+.recharts-text {
+    fill: #9ca3af !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+.recharts-legend-item-text {
+    color: #ffffff !important;
+}
+
+.recharts-tooltip-wrapper {
+    background: #22262e !important;
+    border: 1px solid #3a404a !important;
+    border-radius: 8px !important;
+}
+
+.recharts-default-tooltip {
+    background-color: #22262e !important;
+    border: 1px solid #3a404a !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
+}
+
+.recharts-tooltip-label {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    margin-bottom: 8px !important;
+}
+
+.recharts-tooltip-item {
+    color: #9ca3af !important;
+}
+
+.recharts-pie-label-text {
+    fill: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+}
+
+/* Responsive design */
+@media (max-width: 900px) {
+    .analytics-page {
+        padding: 16px;
+    }
+    
+    .history-chart-container,
+    .pie-chart-section {
+        padding: 20px;
+    }
+    
+    .analytics-section-title {
+        font-size: 1.25rem;
+        margin-bottom: 16px;
+    }
+    
+    .history-chart {
+        padding: 16px;
+    }
+    
+    .pie-chart {
+        min-height: 300px;
+    }
+    
+    .ai-insight {
+        padding: 16px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .analytics-page {
+        padding: 12px;
+    }
+    
+    .history-chart-container,
+    .pie-chart-section {
+        padding: 16px;
+    }
+    
+    .analytics-section-title {
+        font-size: 1.1rem;
+    }
+    
+    .pie-chart {
+        min-height: 250px;
+    }
+}

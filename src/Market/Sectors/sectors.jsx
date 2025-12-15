@@ -1,13 +1,17 @@
 import "../Sectors/sectors.css"
 import StockChartCard from "../../Components/StockChartCard/StockChartCard";
 import { useState, useEffect } from "react";
+import LoadingSpinner from "../../Components/LoadingPage/LoadingPage";
 
 const Sectors = () => {
     const stocks = ["XLK", "XLE", "XLF", "XLV", "XLI", "XLB", "XLU", "XLRE", "XLC", "XLY", "XLP"];
     const [chartData, setChartData] = useState([]);
 
+    const [isLoading, setIsLoading] = useState(true);
+
     const getData = async () => {
         try {
+            setIsLoading(true)
             const response = await fetch(
                 "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/list",
                 {
@@ -56,12 +60,18 @@ const Sectors = () => {
             
         } catch (error) {
             console.log(error.message)
+        } finally {
+            setIsLoading(false)
         }
     }
 
     useEffect(() => {
         getData();
     }, [])
+
+    if (isLoading){
+        return <LoadingSpinner message="Loading sector data..."/>
+    }
     
     return (
             <div className="indices-list">

@@ -2,6 +2,7 @@ import { useUser } from "../../../Contexts/UserContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../BuyStock/BuyStock.css"
+import { TradeLoadingState } from "../../../Components/LoadingPage/LoadingPage";
 
 const SellStock = () => {
     const {state, dispatch} = useUser();
@@ -15,8 +16,12 @@ const SellStock = () => {
     const [selectedStock, setSelectedStock] = useState(null);
     const [error, setError] = useState("");
 
+    const [isFocused, setIsFocused] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleStockSearch = async () => {
         try {
+            setIsLoading(true)
             const response = await fetch(
                 `https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/latest?symbol=${symbol}`,
                 {
@@ -30,6 +35,8 @@ const SellStock = () => {
             setSelectedStock(result);
         } catch (error) {
             console.log(error)
+        } finally{
+            setIsLoading(false);
         }
        
     };
@@ -136,20 +143,24 @@ const SellStock = () => {
             <div className="buy-container">
                 <div className="buy-header">
                     <h1>Sell Stock</h1>
-                    <button className="close-button" onClick={() => navigate("/trade-simulator")}>
+                    <button className="close-button" onClick={() => navigate("/portfolio/trade-simulator")}>
                         ✕
                     </button>
                 </div>
 
                 <div className="stock-search-section">
-                    <label>Search Stock</label>
+                    <label>{!isFocused ? "Search Stock" : "Click Outside Text Box to fetch price"}</label>
                     <input
                         type="text"
                         className="stock-search-input"
                         placeholder="Enter symbol (e.g., AAPL)"
                         value={symbol}
                         onChange={(e) => setSymbol(e.target.value.toUpperCase())}
-                        onBlur={handleStockSearch}
+                        onFocus={() => setIsFocused(true)}  
+                        onBlur={(e) => {
+                            setIsFocused(false);  
+                            handleStockSearch(e); 
+                        }}
                     />
                 </div>
 
@@ -183,17 +194,24 @@ const SellStock = () => {
                             <span>{shares || 0}</span>
                         </div>
                         <div className="summary-row">
+                            <span>Available Shares:</span>
+                            <span>{selectedStock 
+                                ? state.holdings.find(item => item.symbol === selectedStock.symbol)?.quantity || 0
+                                : 0
+                            }</span>
+                        </div>
+                        <div className="summary-row">
                             <span>Price per share:</span>
-                            <span>${selectedStock?.close?.toFixed(2) || '0.00'}</span>
+                            {isLoading ? <TradeLoadingState size={10}/> : <span>${selectedStock?.close?.toFixed(2) || '0.00'}</span>}
                         </div>
                         <div className="summary-row total">
                             <span>Total Value:</span>
                             <span>${((shares || 0) * (selectedStock?.close || 0)).toFixed(2)}</span>
                         </div>
                         <div className="summary-row">
-                            <span>Available Shares:</span>
-                            <span className={state.cash >= (shares * (selectedStock?.close || 0)) ? 'positive' : 'negative'}>
-                                ${state.cash?.toFixed(2) || '0.00'}
+                            <span>Cash After Trade:</span>
+                            <span className="positive">
+                                ${(state.cash + ((shares || 0) * (selectedStock?.close || 0))).toFixed(2) || '0.00'}
                             </span>
                         </div>
                     </div>
@@ -213,7 +231,7 @@ const SellStock = () => {
                         <button
                             className="buy-button"
                             onClick={handleSell}
-                            disabled={!selectedStock || !shares || state.cash < (shares * selectedStock?.price)}
+                            disabled={!selectedStock || !shares ||  state.holdings.find(item => item.symbol == selectedStock.symbol).quantity < shares}
                         >
                             Sell {shares || 0} Shares
                         </button>

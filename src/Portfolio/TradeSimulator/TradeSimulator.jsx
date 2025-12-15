@@ -1,10 +1,16 @@
 import { useUser } from "../../Contexts/UserContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../TradeSimulator/TradeSimulator.css"
+import LoadingSpinner from "../../Components/LoadingPage/LoadingPage";
+import ReactMarkdown from 'react-markdown'
+import { useAI } from "../../Contexts/AIContext";
+import AIChat from "../../Components/AIChat/AIChat";
 
 const TradeSimulator = () => {
     const {state, dispatch} = useUser();
+    const { askAI, conversationHistory, isAILoading } = useAI();
+
     
     const navigate = useNavigate();
 
@@ -13,9 +19,13 @@ const TradeSimulator = () => {
 
     const [priceInfo, setPriceInfo] = useState([]);
     const [portfolioValue, setPortfolioValue] = useState(0);
+    const [insightSummary, setInsightSummary] = useState("");
+
+    const [isLoading, setIsLoading] = useState(true);
 
     const getPriceInfo = async () => {
         try {
+            setIsLoading(true)
             const response = await fetch(
                     "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/holdings-prices",
                     {
@@ -47,12 +57,54 @@ const TradeSimulator = () => {
             } catch (error)
             {
                 console.log(error);
+            } finally {
+                setIsLoading(false)
             }
+    }
+
+    const getPortfolioInsight = async () => {
+        try {
+            
+            const response = await fetch(
+                    `https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/ai-insight/portfolio-summary?userId=${state.user.userId}`,
+                    {
+                    method: "GET",
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                console.log(result.summary);
+                return result.summary
+        } catch (error) {
+            console.log(error)
+        }
     }
     
 
     useEffect(() => {
         getPriceInfo();
+    }, [state.holdings, state.cash])
+
+    const isfetchingRef = useRef(false);
+
+    useEffect(() => {
+        if (isfetchingRef.current) return; // Skip if already fetching
+        
+        isfetchingRef.current = true;
+        
+        const fetchInsight = async () => {
+            try {
+                const insight = await getPortfolioInsight();
+                setInsightSummary(insight);
+            } finally {
+                isfetchingRef.current = false; // Reset when done
+            }
+        };
+        
+        fetchInsight();
     }, [state.holdings, state.cash])
 
 
@@ -90,6 +142,10 @@ const TradeSimulator = () => {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    if (isLoading) {
+        return <LoadingSpinner message="Loading Portfolio Details..."/>
     }
     
 
@@ -151,6 +207,24 @@ const TradeSimulator = () => {
             <div>
 
             </div>
+            {/* <div className="ai-insights">
+                <h1 className="ai-insights-header">AI Assistant</h1>
+                <div className="insight-option-buttons">
+                    <button className="insight-option-button">What Stocks Should I Buy</button>
+                    <button className="insight-option-button">What Stocks Should I Sell</button>
+
+                </div>
+                
+            </div>
+            <div className="ai-insights">
+                 <h1 className="ai-insights-header">AI Assistant</h1>
+                <div className="insight-text">
+                   
+                    <ReactMarkdown>{insightSummary}</ReactMarkdown>
+                </div>
+            </div> */}
+            <AIChat pageContext="(The User is currently on the trade simulator page)"/>
+            
             
         </div>
     )

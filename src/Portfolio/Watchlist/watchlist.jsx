@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import popularStocks from "../../s&p500stocks.json"
 import StockChartCard from "../../Components/StockChartCard/StockChartCard";
 import "../Watchlist/watchlist.css"
+import LoadingSpinner from "../../Components/LoadingPage/LoadingPage";
+import AIChat from "../../Components/AIChat/AIChat";
 
 const Watchlist = () => {
     const {state, dispatch} = useUser();
@@ -13,6 +15,8 @@ const Watchlist = () => {
     const [filteredStocks, setFilteredStocks] = useState([]);
 
     const [chartData, setChartData] = useState([]);
+
+    const [isLoading, setIsLoading] = useState(true);
 
     const [watchlistData, setWatchlistData] = useState([]);
 
@@ -29,6 +33,7 @@ const Watchlist = () => {
         console.log("stocks", stocks)
         console.log(state.watchlist)
         try {
+            setIsLoading(true);
             const response = await fetch(
                 "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/list",
                 {
@@ -59,6 +64,8 @@ const Watchlist = () => {
 
         } catch (error) {
             console.error(error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -114,7 +121,12 @@ const Watchlist = () => {
         setStocksToAdd(newList);
     }
 
+    if (isLoading) {
+        return <LoadingSpinner message="Loading watchlisted stocks..." />
+    }
+
     return (
+        <div>
         <div className="watchlist-container">
             {state.watchlist.length === 0 && (
                 <h1>You have no saved stocks</h1>
@@ -130,6 +142,7 @@ const Watchlist = () => {
                     />
                 ))}
             </div>
+            
          
             
             {addToWatchlist && (
@@ -176,6 +189,11 @@ const Watchlist = () => {
                     </form>
                 </div>
              )}
+             
+        </div>
+            <div className="ai-chat-div">
+                <AIChat pageContext="(The User is currently on the watchlist page)"/>
+            </div>
         </div>
             )
 }

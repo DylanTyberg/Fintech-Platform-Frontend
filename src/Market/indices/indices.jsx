@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import IntradayChart from "../../Components/intraday-chart/indraday-chart";
-import "./indices.css"
+import "../indices/indices.css"
 import { Outlet, useNavigate } from "react-router-dom";
 import StockChange from "../../Components/stock-change/stock-change";
 import StockChartCard from "../../Components/StockChartCard/StockChartCard";
+import LoadingSpinner from "../../Components/LoadingPage/LoadingPage";
 
 const Indices = () => {
     const date = new Date();
@@ -16,10 +17,13 @@ const Indices = () => {
     const [chartDataDIA, setChartDataDIA] = useState([]);
     const [chartDataQQQ, setChartDataQQQ] = useState([]);
 
+    const [isLoading, setIsLoading] = useState(true);
+
     const stocks = ["SPY", "DIA", "QQQ"]
 
     const getData = async () => {
         try {
+            setIsLoading(true)
             const response = await fetch(
                 "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/list",
                 {
@@ -66,16 +70,22 @@ const Indices = () => {
             
         } catch (error) {
             console.log(error.message)
+        } finally {
+            setIsLoading(false)
         }
     }
 
     useEffect(() => {
         getData();
     }, [])
+
+    if (isLoading){
+        return <LoadingSpinner message="Loading index data..." />
+    }
     
     return (
         <div >
-            <h1 className="chart-date">{date.toLocaleDateString("en-US", { month: "long", day: "numeric", weekday: "long"})}</h1>
+           
             
             <div className="indices-list">
                 <StockChartCard symbol={"SPY"} title={"S&P500"} chartData={chartDataSPY}/>

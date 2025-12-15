@@ -1,6 +1,31 @@
 .stock-details-page{
-    background-color: #2f2f2f;
+    width: 100%;
     height: 100%;
+
+}
+.details-title-div {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.details-title-div h1 {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+
+  background: linear-gradient(90deg, #93c5fd, #93c5fd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.ai-agent-div{
+  width: 80%;
+  margin-left: 10%;
+  margin-bottom: 20px;
 }
 .details-component{
     display: flex;
@@ -11,9 +36,17 @@
     align-items: center;
     
 }
-.window-buttons{
-    margin-top: 20px;
-    margin-bottom: 20px;
+.window-buttons {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Optional placeholder to balance layout */
+.placeholder {
+  flex: 0 0 auto;
 }
 .window-toggle {
   color: #ffffff;               /* text color */

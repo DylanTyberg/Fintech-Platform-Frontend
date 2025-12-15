@@ -2,6 +2,7 @@ import "../Stock-details/stock-details.css"
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import IntradayChart from "../Components/intraday-chart/indraday-chart";
+import AIChat from "../Components/AIChat/AIChat";
 
 const StockDetails = () => {
     const {symbol} = useParams();
@@ -23,17 +24,21 @@ const StockDetails = () => {
             if (response.ok){
                 console.log(response);
                 try {
-                    const result = await fetch(`https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/daily?symbol=${encodeURIComponent(symbol)}`,
+                    const result = await fetch(`https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/daily/list`,
                         { 
-                            method: "GET",
-
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ symbols: [symbol] })
                         }
                     )
                     if (result.ok){
                         const data = await result.json();
-                        setStockData(data);
+                        console.log(data.results[0].data)
+                        setStockData(data.results[0].data);
 
-                        const sortedData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                        const sortedData = data.results[0].data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                         
                         const seen = new Set();
 
@@ -113,6 +118,7 @@ const StockDetails = () => {
         if (index === 1){
             
             const newChartData = chartDataDaily.slice(-30)
+            console.log(newChartData)
             setChartData(newChartData)
             setActiveChart([false, true, false, false])
         } 
@@ -130,18 +136,25 @@ const StockDetails = () => {
     }
     return (
         <div className="stock-details-page">
+            
             <div className="details-component">
-                <div className="window-buttons">
-                    <button className={activeChart[0] ? "window-toggle-active" : "window-toggle"} onClick={() => handleChartSwitch(0)}>1 Day</button>
-                    <button className={activeChart[1] ? "window-toggle-active" : "window-toggle"} onClick={() => handleChartSwitch(1)}>30 Days</button>
-                    <button className={activeChart[2] ? "window-toggle-active" : "window-toggle"} onClick={() => handleChartSwitch(2)}>90 Days</button>
-                    <button className={activeChart[3] ? "window-toggle-active" : "window-toggle"} onClick={() => handleChartSwitch(3)}>1 Year</button>
+                <div className="details-title-div">
+                    <h1>{symbol}</h1>
+                    <div className="window-buttons">
+                        
+                        <button className={activeChart[0] ? "window-toggle-active" : "window-toggle"} onClick={() => handleChartSwitch(0)}>1 Day</button>
+                        <button className={activeChart[1] ? "window-toggle-active" : "window-toggle"} onClick={() => handleChartSwitch(1)}>30 Days</button>
+                        <button className={activeChart[2] ? "window-toggle-active" : "window-toggle"} onClick={() => handleChartSwitch(2)}>90 Days</button>
+                        <button className={activeChart[3] ? "window-toggle-active" : "window-toggle"} onClick={() => handleChartSwitch(3)}>1 Year</button>
+                    </div>
+                    <div className="placeholder"></div>
                 </div>
                 <IntradayChart data={chartData} width={800} height={350}/>
-                <div>
-                    
-                </div>
+                
            </div>
+           <div className="ai-agent-div">
+                <AIChat pageContext={`(The User is on the stock details page for ${symbol}, Includes charts showing 1 day, 30 day, 90, 1 year)`}/>
+            </div>
         </div>
     )
 }

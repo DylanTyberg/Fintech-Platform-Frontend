@@ -10,6 +10,7 @@ const initialState = savedState || {
     watchlist: [],
     holdings: [],
     trades: [],
+    snapshots: [],
     cash: 0,
 }
 const logoutState = {
@@ -17,6 +18,7 @@ const logoutState = {
     watchlist: [],
     holdings: [],
     trades: [],
+    snapshots: [],
     cash: 0,
 }
 
@@ -32,7 +34,9 @@ const userReducer = (state, action) => {
         case "SET_WATCHLIST":
             return {...state, watchlist: action.payload};
         case "SET_HOLDINGS":
-            return {...state, holdings: action.payload};        
+            return {...state, holdings: action.payload};  
+        case "SET_SNAPSHOTS":
+            return {...state, snapshots: action.payload};      
         case "ADD_TO_WATCHLIST":
             const newSet = new Set(state.watchlist);
             newSet.add(action.payload);

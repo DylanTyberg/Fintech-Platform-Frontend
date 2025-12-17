@@ -10,6 +10,8 @@ const Watchlist = () => {
     const {state, dispatch} = useUser();
 
     const [addToWatchlist, setAddToWatchlist] = useState(false);
+    const [removeWathclistDisplay, setRemoveWathlistDisplay] = useState(false);
+
     const [stocksToAdd, setStocksToAdd] = useState([]);
     const [filterValue, setFilterValue] = useState("");
     const [filteredStocks, setFilteredStocks] = useState([]);
@@ -41,12 +43,13 @@ const Watchlist = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify( {stocks} ), // wraps it in { stocks: [...] }
+                body: JSON.stringify( {stocks} ), 
                 }
             );
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                
+                 
             }
 
             const result = await response.json();
@@ -72,6 +75,20 @@ const Watchlist = () => {
     const handleClickStock = (stock) => {
         const newList = stocksToAdd;
         setStocksToAdd([...newList, stock.Symbol]);
+    }
+    const handleClickStockAdd = async (stock) => {
+        const newList = stocksToAdd;
+        setStocksToAdd([...newList, stock]);
+        intradayPut(stock);
+        
+        
+    }
+    const intradayPut = async (stock) => {
+        const response = await fetch(`https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/request?symbol=${encodeURIComponent(stock)}`,
+        { 
+            method: "POST",
+
+        })
     }
 
     const updateDynamo = async (stocks) => {
@@ -113,12 +130,35 @@ const Watchlist = () => {
         e.preventDefault();
         getData(stocksToAdd);
         updateDynamo(stocksToAdd);
+        setAddToWatchlist(false);
 
     }
+    
 
     const handleRemoveStock = (remove) => {
         const newList = stocksToAdd.filter(stock => stock !== remove);
         setStocksToAdd(newList);
+    }
+
+    const deleteFromWatchlist = async (symbol) => {
+        dispatch({type : "REMOVE_FROM_WATCHLIST", payload : symbol})
+        console.log("dispatch ran")
+
+        const response = await fetch('https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/user/watchlist', {
+            method: 'DELETE',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+            user: state.user.userId,
+            type: 'watchlist',
+            symbol: symbol
+            })
+        });
+        console.log(response.json())
+        window.location.reload();
+        
+        
     }
 
     if (isLoading) {
@@ -131,7 +171,18 @@ const Watchlist = () => {
             {state.watchlist.length === 0 && (
                 <h1>You have no saved stocks</h1>
             )}
-            <button className="add-to-watchlist-button" onClick={() => setAddToWatchlist(true)}>Add Stocks to Watchlist</button>
+            <div className="watchlist-buttons">
+                <button className="add-to-watchlist-button" onClick={() => setAddToWatchlist(true)}>Add Stocks to Watchlist</button>
+                <button className="add-to-watchlist-button" onClick={() => {setRemoveWathlistDisplay(!removeWathclistDisplay)}}>Remove From Watchlist</button>
+
+            </div>
+            {removeWathclistDisplay && 
+            <div className="delete-watchlist-list">
+                {state.watchlist.map((stock) => (
+                    <button className="delete-watchlist-button" onClick={() => deleteFromWatchlist(stock)}>Delete {stock}</button>
+                ))}
+            </div>
+            }
             <div className="indices-list">
                 {chartData.map((data, i) => (
                     <StockChartCard 
@@ -173,7 +224,7 @@ const Watchlist = () => {
                             placeholder="Search Popular stocks or enter symbol and submit" 
                             onChange={(e) => setFilterValue(e.target.value)}
                         />
-                        <button className="add-button" type="button">Add</button>
+                        <button className="add-button" type="button" onClick={() => handleClickStockAdd(filterValue.toUpperCase())}>Add</button>
                         <div className="filtered-stocks-list">
                             {filterValue.length > 1 && filteredStocks.map((stock) => (
                                 <div 

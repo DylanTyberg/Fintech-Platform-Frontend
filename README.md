@@ -1,70 +1,85 @@
-# Getting Started with Create React App
+# Serverless Financial Market Analysis & Paper Trading Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack fintech application built on AWS serverless architecture, featuring near real-time market data for 8000+ stocks, AI-powered context aware investment recommendations, and paper trading simulation.
 
-## Available Scripts
+🔗 [Live Demo]() | 📹 [Video Demo]() 
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- 📈 **Near Real-time market data** for 8000+ stocks with interactive multi-timeframe charts
+- 🤖 **AI-powered investment assistant** using Claude Sonnet 3.5 with portfolio-aware recommendations
+- 💰 **Paper trading simulator** with near real-time pricing and portfolio tracking
+- ⚡ **Serverless architecture** with automatic scaling and pay-per-execution cost model
+- 🎯 **Smart caching strategy** reducing API costs for popular stocks
+- 🔐 **Secure authentication** with AWS Cognito and JWT authorization
+- 📊 **Portfolio analytics** with daily snapshots and performance tracking
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Architecture
+<img width="1801" height="1438" alt="image" src="https://github.com/user-attachments/assets/3008798a-4189-4e26-ba7f-4871316b9414" />
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1) Amazon S3  - Static hosting for React Frontend Client
 
-### `npm test`
+2) API Gateway - REST API with JWT authorization and Lambda proxy integration
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3) Amazon Cognito - User authentication with token-based authorization
 
-### `npm run build`
+4) Lambda: Real-Time Data Functions - Direct Polygon.io fetches for immediate user requests
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+5) Lambda: Market Data Fetchers - Scheduled functions retrieving different data types from 
+   Polygon.io (intraday prices, daily OHLC, market movers) and storing in DynamoDB cache 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+6) Lambda: Cache Read Functions - Serve stock data from DynamoDB cache 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+7) Lambda: Portfolio Updates - Updates DynamoDB to reflext portfolio changes
 
-### `npm run eject`
+8) Lambda: Portfolio Query Functions - Aggregate user data endpoints (holdings, positions, 
+   transaction history, performance metrics)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+9) Lambda: AI Chat Initiator - Creates async Bedrock request and returns polling token to 
+   bypass API Gateway 29-second timeout
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+10) Lambda: AI Polling Handler - Client polls this endpoint to check AI response completion 
+    status
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+11) Lambda: Bedrock Invoker - Executes long-running Claude Sonnet 3.5 with tool-calling 
+    architecture for portfolio-aware recommendations
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+12) Lambda: Portfolio Analytics - Scheduled calculations like portfolio snapshots
 
-## Learn More
+13) Lambda: Scheduled Market Updates - EventBridge-triggered functions refreshing cached 
+    data for popular/watchlisted stocks across multiple data types
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+14) DynamoDB: Market Cache - Stores market data from polygon
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+15) DynamoDB: User Data - Partition key: userId; stores portfolios, holdings, trades, 
+    watchlists with optimized sort keys for query patterns
 
-### Code Splitting
+16) EventBridge - Scheduled rules triggering market data updates every 15 minutes during 
+    market hours
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+17) Amazon Bedrock - Claude Sonnet 3.5 with function calling for personalized investment 
+    recommendations
 
-### Analyzing the Bundle Size
+18) Polygon.io API - Real-time and historical financial market data provider (stocks, 
+    options, forex, crypto)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Tech Stack
 
-### Making a Progressive Web App
+**Frontend**
+- React 18 with JavaScript
+- LightWeight from TradingView for interactive financial charts
+- CSS for styling
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+**Backend & Infrastructure**
+- AWS Lambda (Node.js) - Serverless compute
+- AWS API Gateway - REST API
+- Amazon DynamoDB - NoSQL database (2 tables)
+- Amazon Cognito - User authentication
+- Amazon Bedrock - AI integration (Claude Sonnet 3.5)
+- Amazon EventBridge - Scheduled data updates
+- Amazon S3- Static hosting & CDN
 
-### Advanced Configuration
+**External APIs**
+- Polygon.io - Financial market data
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

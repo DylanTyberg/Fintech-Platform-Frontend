@@ -262,6 +262,36 @@
   box-shadow: 0 0 0 3px rgba(59,130,246,0.4);
 }
 
+/* Reset Portfolio Button */
+.reset-portfolio-button {
+  background-color: #2a2f38;
+  color: #EF4444;
+  border: 1px solid #EF4444;
+  border-radius: 8px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 50px;
+  margin-left: 40%;
+}
+
+.reset-portfolio-button:hover {
+  background-color: #EF4444;
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.reset-portfolio-button:active {
+  transform: translateY(0);
+}
+
 
 
 /* Responsive design */

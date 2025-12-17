@@ -6,6 +6,7 @@ import LoadingSpinner from "../../Components/LoadingPage/LoadingPage";
 import ReactMarkdown from 'react-markdown'
 import { useAI } from "../../Contexts/AIContext";
 import AIChat from "../../Components/AIChat/AIChat";
+import {signOut} from 'aws-amplify/auth';
 
 const TradeSimulator = () => {
     const {state, dispatch} = useUser();
@@ -22,6 +23,8 @@ const TradeSimulator = () => {
     const [insightSummary, setInsightSummary] = useState("");
 
     const [isLoading, setIsLoading] = useState(true);
+
+    
 
     const getPriceInfo = async () => {
         try {
@@ -62,26 +65,26 @@ const TradeSimulator = () => {
             }
     }
 
-    const getPortfolioInsight = async () => {
-        try {
+    // const getPortfolioInsight = async () => {
+    //     try {
             
-            const response = await fetch(
-                    `https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/ai-insight/portfolio-summary?userId=${state.user.userId}`,
-                    {
-                    method: "GET",
-                    }
-                );
+    //         const response = await fetch(
+    //                 `https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/ai-insight/portfolio-summary?userId=${state.user.userId}`,
+    //                 {
+    //                 method: "GET",
+    //                 }
+    //             );
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const result = await response.json();
-                console.log(result.summary);
-                return result.summary
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    //             if (!response.ok) {
+    //                 throw new Error(`HTTP error! status: ${response.status}`);
+    //             }
+    //             const result = await response.json();
+    //             console.log(result.summary);
+    //             return result.summary
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
     
 
     useEffect(() => {
@@ -90,22 +93,22 @@ const TradeSimulator = () => {
 
     const isfetchingRef = useRef(false);
 
-    useEffect(() => {
-        if (isfetchingRef.current) return; // Skip if already fetching
+    // useEffect(() => {
+    //     if (isfetchingRef.current) return; // Skip if already fetching
         
-        isfetchingRef.current = true;
+    //     isfetchingRef.current = true;
         
-        const fetchInsight = async () => {
-            try {
-                const insight = await getPortfolioInsight();
-                setInsightSummary(insight);
-            } finally {
-                isfetchingRef.current = false; // Reset when done
-            }
-        };
+    //     const fetchInsight = async () => {
+    //         try {
+    //             const insight = await getPortfolioInsight();
+    //             setInsightSummary(insight);
+    //         } finally {
+    //             isfetchingRef.current = false; // Reset when done
+    //         }
+    //     };
         
-        fetchInsight();
-    }, [state.holdings, state.cash])
+    //     fetchInsight();
+    // }, [state.holdings, state.cash])
 
 
     const handleCashSubmit = async (e) => {
@@ -136,6 +139,7 @@ const TradeSimulator = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const result = await response.json();
+            setIntroForm(false);
             console.log(result);
 
 
@@ -143,6 +147,39 @@ const TradeSimulator = () => {
             console.log(error);
         }
     }
+
+    const resetPortfolio = async () => {
+        const confirmed = window.confirm(
+            '⚠️ Are you sure you want to reset your portfolio?\n\n' +
+            'This will delete all your portfolio data including:\n' +
+            '• Holdings\n' +
+            '• Transactions\n' +
+            '• Performance history\n\n' +
+            'Your watchlist will be preserved.\n\n' +
+            'This action cannot be undone and you will be signed out.'
+        );
+        
+        if (!confirmed) {
+            return; // User cancelled
+        }
+        
+        const response = await fetch('https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/user/portfolio-reset', {
+            method: 'DELETE',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+            user: state.user.userId
+            })
+        });
+        
+        const result = await response.json();
+        console.log(`Deleted ${result.deletedCount} items`);
+        await signOut();
+        dispatch({type: "LOGOUT"});
+        window.location.href = '/sign-in';
+        
+    };
 
     if (isLoading) {
         return <LoadingSpinner message="Loading Portfolio Details..."/>
@@ -224,7 +261,7 @@ const TradeSimulator = () => {
                 </div>
             </div> */}
             <AIChat pageContext="(The User is currently on the trade simulator page)"/>
-            
+            <button className="reset-portfolio-button" onClick={resetPortfolio}>RESET PORTFOLIO</button>
             
         </div>
     )

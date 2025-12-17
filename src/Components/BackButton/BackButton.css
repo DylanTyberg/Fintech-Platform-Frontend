@@ -1,0 +1,41 @@
+
+.back-button {
+  position: absolute;
+  background-color: #22262e;
+  color: #9CA3AF;
+  border: 1px solid #3a404a;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-left: 4px;
+}
+
+.back-arrow {
+  font-size: 18px;
+  font-weight: 700;
+  transition: transform 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: #2a2f38;
+  border-color: #0EA5E9;
+  color: #0EA5E9;
+  transform: translateY(-1px);
+}
+
+.back-button:hover .back-arrow {
+  transform: translateX(-3px);
+}
+
+.back-button:active {
+  transform: translateY(0);
+}

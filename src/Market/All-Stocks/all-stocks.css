@@ -1,20 +1,21 @@
+
 .stocks-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns */
-  gap: 16px;                             /* space between cards */
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 16px;                             
   padding: 16px;
 }
 
 .stock-card {
-  position: relative;                    /* for positioning symbol */
-  background-color: #22262e;             /* dark card background */
-  color: #E0E0E0;                        /* light text */
-  border: 1px solid #3a404a;             /* subtle border */
-  border-radius: 8px;                     /* slightly rounded corners */
+  position: relative;                   
+  background-color: #22262e;             
+  color: #E0E0E0;                       
+  border: 1px solid #3a404a;            
+  border-radius: 8px;                     
   padding: 16px;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-height: 100px;                          /* fixed height, adjust as needed */
+  min-height: 100px;                          
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,11 +41,12 @@
 }
 .input-fields {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 12px;                 /* space between the filter input and form */
-  margin-bottom: 24px;       /* spacing from the stock grid */
-  flex-wrap: wrap;            /* responsive wrap for smaller screens */
+  gap: 12px;                 
+  margin-bottom: 24px;      
+  flex-wrap: wrap;           
+  width: 50%;
 }
 
 .filter-stocks {
@@ -56,8 +58,9 @@
   padding: 10px 16px;
   font-size: 16px;
   outline: none;
-  flex: 1;                    /* grows to fill available space */
+  flex: 1;                    
   transition: all 0.2s ease;
+  margin-left: 3%;
 }
 
 .filter-stocks::placeholder {
@@ -73,7 +76,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;                  /* space between input and button */
+  gap: 4px;                 
 }
 
 .search-symbol {
@@ -98,9 +101,9 @@
 }
 
 .search-symbol-submit {
-  background-color: #0EA5E9  ;   /* accent blue like active buttons */
+  background-color: #0EA5E9  ;   
   color: #ffffff;
-  border: 1px solid #005a9e;  /* darker border for depth */
+  border: 1px solid #005a9e;  
   border-radius: 8px;
   padding: 10px 16px;
   font-size: 16px;
@@ -111,4 +114,5 @@
 .search-symbol-submit:hover {
   background-color: #0EA5E9  ;
   border-color: #004080;
+  transform: scale(1.05);
 }

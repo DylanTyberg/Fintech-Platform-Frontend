@@ -17,13 +17,11 @@ const AllStocks = () => {
     }, [filterString])
 
     return (
-        <div>
+        <div className="all-stocks-page">
             <div className="input-fields">
-                <input className="filter-stocks" type="text" placeholder="Search Popular Stocks" onChange={(e) => {setFilterString(e.target.value)}}/>
-                <form className="search-symbol-form" onSubmit={(e) => {e.preventDefault(); navigate(`/stock-details/${searchSymbol}`)}}>
-                    <input className="search-symbol" placeholder="Enter Symbol" type="text" onChange={(e) => setSearchSymbol(e.target.value)}/>
-                    <button type="submit" className="search-symbol-submit" >Submit</button>
-                </form>
+                <input className="filter-stocks" type="text" placeholder="Filter Popular Stocks or enter symbol and submit" onChange={(e) => {setFilterString(e.target.value)}}/>
+                
+                <button type="submit" className="search-symbol-submit" onClick={(e) => {e.preventDefault(); navigate(`/stock-details/${filterString}`)}} >Submit</button>
             </div>
             <div className="stocks-list">
                 {

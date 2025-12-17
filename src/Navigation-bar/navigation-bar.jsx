@@ -36,9 +36,9 @@ const NavigationBar = () => {
                     {state.user && <Link className={"navbar-link-sign-in"} onClick={handleSignOut} to="#">
                         Sign Out
                     </Link>}
-                    <Link className={"navbar-link-sign-up"} to="/sign-up">
+                    {!state.user && <Link className={"navbar-link-sign-up"} to="/sign-up">
                         Sign Up
-                    </Link>
+                    </Link>}
                 </div>
                     
             </div>

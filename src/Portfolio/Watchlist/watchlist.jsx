@@ -99,7 +99,7 @@ const Watchlist = () => {
                 details: stock
                 
             }
-            //console.log("symbol", stock);
+            
 
             try {
                 const response = await fetch(

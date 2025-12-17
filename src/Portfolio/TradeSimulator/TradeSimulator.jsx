@@ -65,26 +65,7 @@ const TradeSimulator = () => {
             }
     }
 
-    // const getPortfolioInsight = async () => {
-    //     try {
-            
-    //         const response = await fetch(
-    //                 `https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/ai-insight/portfolio-summary?userId=${state.user.userId}`,
-    //                 {
-    //                 method: "GET",
-    //                 }
-    //             );
 
-    //             if (!response.ok) {
-    //                 throw new Error(`HTTP error! status: ${response.status}`);
-    //             }
-    //             const result = await response.json();
-    //             console.log(result.summary);
-    //             return result.summary
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
     
 
     useEffect(() => {
@@ -93,23 +74,7 @@ const TradeSimulator = () => {
 
     const isfetchingRef = useRef(false);
 
-    // useEffect(() => {
-    //     if (isfetchingRef.current) return; // Skip if already fetching
-        
-    //     isfetchingRef.current = true;
-        
-    //     const fetchInsight = async () => {
-    //         try {
-    //             const insight = await getPortfolioInsight();
-    //             setInsightSummary(insight);
-    //         } finally {
-    //             isfetchingRef.current = false; // Reset when done
-    //         }
-    //     };
-        
-    //     fetchInsight();
-    // }, [state.holdings, state.cash])
-
+    
 
     const handleCashSubmit = async (e) => {
         e.preventDefault();
@@ -160,7 +125,7 @@ const TradeSimulator = () => {
         );
         
         if (!confirmed) {
-            return; // User cancelled
+            return; 
         }
         
         const response = await fetch('https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/user/portfolio-reset', {
@@ -244,22 +209,7 @@ const TradeSimulator = () => {
             <div>
 
             </div>
-            {/* <div className="ai-insights">
-                <h1 className="ai-insights-header">AI Assistant</h1>
-                <div className="insight-option-buttons">
-                    <button className="insight-option-button">What Stocks Should I Buy</button>
-                    <button className="insight-option-button">What Stocks Should I Sell</button>
-
-                </div>
-                
-            </div>
-            <div className="ai-insights">
-                 <h1 className="ai-insights-header">AI Assistant</h1>
-                <div className="insight-text">
-                   
-                    <ReactMarkdown>{insightSummary}</ReactMarkdown>
-                </div>
-            </div> */}
+            
             <AIChat pageContext="(The User is currently on the trade simulator page)"/>
             <button className="reset-portfolio-button" onClick={resetPortfolio}>RESET PORTFOLIO</button>
             

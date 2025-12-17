@@ -6,8 +6,8 @@
 
 .movers-list{
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 3 columns */
-  gap: 16px;                             /* space between cards */
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 16px;                             
   padding: 16px;
     
 }
@@ -25,23 +25,23 @@
     margin-bottom: 20px;
 }
 .movers-toggle {
-  color: #ffffff;               /* text color */
-  background-color: #3b3b3b;    /* slightly lighter than #2f2f2f, low contrast */
+  color: #ffffff;              
+  background-color: #3b3b3b;   
   border: 1px solid #4a4a4a;
   padding: 8px 16px;
   margin: 0 4px;
-  border-radius: 5px;         /* pill shape */
+  border-radius: 5px;        
   font-size: 18px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 .movers-toggle-active {
   color: white;
-  background-color: #0078d4; /* nice blue */
+  background-color: #0EA5E9;
   border: none;
-  padding: 8px 16px;         /* vertical + horizontal padding */
-  margin: 0 4px;             /* space between buttons */
-  border-radius: 5px;      /* makes it fully rounded */
+  padding: 8px 16px;         
+  margin: 0 4px;            
+  border-radius: 5px;      
   font-size: 18px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -49,12 +49,12 @@
 
 
 .movers-toggle:hover {
-  background-color: #005a9e; /* darker blue on hover */
+  background-color: #3a404a; 
 }
 .movers-toggle-active:hover {
-  background-color: #005a9e; /* darker blue on hover */
+  background-color: #0EA5E9;
 }
 
 .movers-toggle:active {
-  transform: scale(0.95);    /* small click effect */
+  transform: scale(0.95);    
 }

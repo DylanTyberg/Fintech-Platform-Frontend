@@ -5,6 +5,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import StockChange from "../../Components/stock-change/stock-change";
 import StockChartCard from "../../Components/StockChartCard/StockChartCard";
 import LoadingSpinner from "../../Components/LoadingPage/LoadingPage";
+import AIChat from "../../Components/AIChat/AIChat";
 
 const Indices = () => {
     const date = new Date();
@@ -31,7 +32,7 @@ const Indices = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify( {stocks} ), // wraps it in { stocks: [...] }
+                body: JSON.stringify( {stocks} ), 
                 }
             );
 
@@ -92,6 +93,7 @@ const Indices = () => {
                 <StockChartCard symbol={"DIA"} title={"DOW"} chartData={chartDataDIA}/>
                 <StockChartCard symbol={"QQQ"} title={"NASDAQ"} chartData={chartDataQQQ}/>
             </div>
+            <AIChat pageContext="(The user is currently on the indecis page showing SPY, DIA, QQQ"/>
         </div>
     )
 }

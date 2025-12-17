@@ -18,7 +18,7 @@ const PortfolioSidebar = () => {
       </aside>
 
       <main className="main-content">
-        <Outlet /> {/* renders Indices or Movers */}
+        <Outlet />
       </main>
     </div>
   );

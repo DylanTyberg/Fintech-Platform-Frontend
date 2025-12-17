@@ -190,7 +190,6 @@
   cursor: not-allowed;
 }
 
-/* Custom scrollbar for chat history */
 .ai-chat-history::-webkit-scrollbar {
   width: 8px;
 }

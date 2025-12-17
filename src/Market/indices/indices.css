@@ -63,22 +63,22 @@
     height: 250px; 
 }
 
-/* Responsive breakpoints */
+
 @media (min-width: 1920px) {
     .indices-list {
-        grid-template-columns: repeat(4, 1fr); /* 4 columns on very large screens */
+        grid-template-columns: repeat(4, 1fr); 
     }
 }
 
 @media (max-width: 1400px) {
     .indices-list {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns */
+        grid-template-columns: repeat(2, 1fr); 
     }
 }
 
 @media (max-width: 900px) {
     .indices-list {
-        grid-template-columns: 1fr; /* 1 column on tablets/mobile */
+        grid-template-columns: 1fr; 
     }
     
     .indices-page {

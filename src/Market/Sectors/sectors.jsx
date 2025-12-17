@@ -2,6 +2,7 @@ import "../Sectors/sectors.css"
 import StockChartCard from "../../Components/StockChartCard/StockChartCard";
 import { useState, useEffect } from "react";
 import LoadingSpinner from "../../Components/LoadingPage/LoadingPage";
+import AIChat from "../../Components/AIChat/AIChat";
 
 const Sectors = () => {
     const stocks = ["XLK", "XLE", "XLF", "XLV", "XLI", "XLB", "XLU", "XLRE", "XLC", "XLY", "XLP"];
@@ -19,7 +20,7 @@ const Sectors = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify( {stocks} ), // wraps it in { stocks: [...] }
+                body: JSON.stringify( {stocks} ), 
                 }
             );
 
@@ -29,19 +30,6 @@ const Sectors = () => {
 
             const result = await response.json();
             
-
-            console.log("API result:", result);
-            console.log(result[0][0])
-            console.log(result[1][0])
-            console.log(result[2][0])
-            console.log(result[3][0])
-            console.log(result[4][0])
-            console.log(result[5][0])
-            console.log(result[6][0])
-            console.log(result[7][0])
-            console.log(result[8][0])
-            console.log(result[9][0])
-            console.log(result[10][0])
 
 
             const allChartData = stocks.map((sym, i) => {
@@ -74,6 +62,7 @@ const Sectors = () => {
     }
     
     return (
+        <div>
             <div className="indices-list">
                 {chartData.length > 0 && <StockChartCard symbol={"XLK"} title={"Technology"} chartData={chartData[0]} delay={0}/>}
                 {chartData.length > 0 && <StockChartCard symbol={"XLE"} title={"Energy"} chartData={chartData[1]} delay={0}/>}
@@ -87,6 +76,8 @@ const Sectors = () => {
                 {chartData.length > 0 && <StockChartCard symbol={"XLY"} title={"Consumer Discretionary"} chartData={chartData[9]} delay={3000}/>}
                 {chartData.length > 0 && <StockChartCard symbol={"XLP"} title={"Consumer Services"} chartData={chartData[10]} delay={3000}/>}
             </div>
+            <AIChat pageContext="(The User is currently on sectors page showing all sector etfs)"/>
+        </div>
     )
 }
 export default Sectors;

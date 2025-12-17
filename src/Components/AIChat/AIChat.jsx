@@ -12,7 +12,7 @@ const AIChat = ({pageContext = ""}) => {
   const {state} = useUser();
   const userId = state.user.userId
 
-  // Auto-scroll to bottom when new messages arrive
+  
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversationHistory, isAILoading]);
@@ -44,7 +44,7 @@ const AIChat = ({pageContext = ""}) => {
             <div key={i} className="ai-chat-exchange">
              
               <div className="ai-chat-user-message">
-                <strong>You:</strong> {prompt}
+                <strong></strong> {prompt}
               </div>
               
               

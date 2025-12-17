@@ -17,6 +17,8 @@ const SignIn = () => {
     const {state, dispatch} = useUser();
 
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState(null)
     
 
 
@@ -60,7 +62,7 @@ const SignIn = () => {
                     type: "SET_WATCHLIST",
                     payload: userItems
                         .filter(item => item.type?.startsWith("watchlist#"))
-                        .map(item => item.type.split("#")[1]), // Extract symbol after the #
+                        .map(item => item.type.split("#")[1]),  
                 });
 
                 dispatch({
@@ -94,7 +96,7 @@ const SignIn = () => {
 
             } catch (error) {
                 console.log(error)
-                setMessage(error.message);
+                setError(error.message || 'Failed to sign in. Please try again.')
             } finally {
                 setIsLoading(false);
             }
@@ -102,13 +104,51 @@ const SignIn = () => {
 
     return (
         <div className="sign-up-page">
+            {error && <div className="error-message">{error}</div>}
             <form className="sign-up-form" onSubmit={handleSignIn}>
+                <h1 className="sign-up-title">Sign In</h1>
+
+                <div className="form-group">
+                    <label htmlFor="email" className="form-label">Email</label>
+                    <div className="password-input-wrapper">
+                        <input 
+                            id="email"
+                            className="form-input" 
+                            type='email' 
+                            placeholder="example@gmail.com" 
+                            required 
+                            onChange={(e) => {setUsername(e.target.value)}}
+                        />
+                    </div>
+                </div>
                 
-                <input className="username-field" type='text' placeholder="Enter email" required onChange={(e) => {setUsername(e.target.value)}}/>
-                <input className="password-field" type='password' placeholder="Enter Password" required onChange={(e) => {setPassword(e.target.value)}}/>
-                {isLoading ? <div className="sign-in-loading"><TradeLoadingState size={20}/></div> : <button className="submit-button" type='submit'>Sign In</button>}
-            </form>
-        </div>
+                <div className="form-group">
+                    <label htmlFor="password" className="form-label">Password</label>
+                    <div className="password-input-wrapper">
+                        <input 
+                            id="password"
+                            className="form-input" 
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder="Enter your password" 
+                            required 
+                            onChange={(e) => {setPassword(e.target.value)}}
+                        />
+                        
+                    </div>
+                </div>
+            
+            {isLoading ? (
+                <div className="sign-in-loading">
+                    <TradeLoadingState size={20}/>
+                </div>
+            ) : (
+                <button className="submit-button" type='submit'>Sign In</button>
+            )}
+             <p className="auth-switch">
+                Don't have an account? <a href="/sign-up" className="auth-link">Sign Up</a>
+            </p>
+        </form>
+    </div>
     )
 }
 export default SignIn;

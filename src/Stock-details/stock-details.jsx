@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import IntradayChart from "../Components/intraday-chart/indraday-chart";
 import AIChat from "../Components/AIChat/AIChat";
+import BackButton from "../Components/BackButton/BackButton";
+import LoadingSpinner from "../Components/LoadingPage/LoadingPage";
 
 const StockDetails = () => {
     const {symbol} = useParams();
@@ -10,10 +12,14 @@ const StockDetails = () => {
     const [chartDataDaily, setChartDataDaily] = useState([])
     const [chartDataIntraday, setChartDataIntraday] = useState([])
     const [chartData, setChartData] = useState([])
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [error, setError] = useState(null);
     
     const [activeChart, setActiveChart] = useState([true, false, false, false]);
 
     const getDaily = async () => {
+        setIsLoading(true)
         try {
             const response = await fetch(`https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/daily?symbol=${encodeURIComponent(symbol)}`,
                { 
@@ -45,7 +51,7 @@ const StockDetails = () => {
                         const newChartData = sortedData.map(({timestamp, close}) => {
                             const date = new Date(timestamp);
                             const day = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
-                            if (seen.has(day)) return null; // skip duplicates
+                            if (seen.has(day)) return null; 
                             seen.add(day);
                             return { time: day, value: close };
                         }).filter(Boolean);
@@ -54,17 +60,20 @@ const StockDetails = () => {
                     }
                 
                 } catch (error) {
-
+                    setError(error.message)
                 }
             }
         }
         catch (error){
-            //
+            setError(error.message)
+        } finally {
+            
         }
     }
 
     const getIntraday = async () => {
-           try {
+        setIsLoading(true)   
+        try {
             const response = await fetch(`https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/request?symbol=${encodeURIComponent(symbol)}`,
                { 
                 method: "POST",
@@ -82,6 +91,9 @@ const StockDetails = () => {
                     )
                     if (result.ok){
                         const data = await result.json();
+                        if (!error && data.length === 0) {
+                            setError(`No Data Avaliable for ${symbol}`)
+                        }
                         console.log(data);
                         setStockData(data);
                         const newChartData = data.map(({timestamp, close}) => ({
@@ -91,15 +103,20 @@ const StockDetails = () => {
 
                         setChartDataIntraday(newChartData);
                         setChartData(newChartData);
-                    }
+                    } 
+                        
+                    
                 
                 } catch (error) {
-
+                    setError(error.message)
                 }
             }
         }
         catch (error){
-            //
+            setError(error.message)
+        } finally{
+            setIsLoading(false);
+            
         }
     }
 
@@ -134,9 +151,15 @@ const StockDetails = () => {
         }
 
     }
+
+    if (isLoading) {
+        return <LoadingSpinner message={`Loading data for ${symbol}...`} />
+    }
+
     return (
         <div className="stock-details-page">
-            
+            <BackButton />
+            {error && <div className="stock-details-error-message">{error}</div>}
             <div className="details-component">
                 <div className="details-title-div">
                     <h1>{symbol}</h1>

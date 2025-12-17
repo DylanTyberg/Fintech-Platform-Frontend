@@ -3,6 +3,19 @@
     height: 100%;
 
 }
+.stock-details-error-message {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid #EF4444;
+    color: #EF4444;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    text-align: center;
+    margin-left: 30%;
+    max-width: 40%;
+    margin-top: 10px;
+}
 .details-title-div {
   display: flex;
   align-items: center;
@@ -61,7 +74,7 @@
 }
 .window-toggle-active {
   color: white;
-  background-color: #0078d4; /* nice blue */
+  background-color: #0EA5E9; 
   border: none;
   padding: 8px 16px;         /* vertical + horizontal padding */
   margin: 0 4px;             /* space between buttons */
@@ -73,10 +86,10 @@
 
 
 .window-toggle:hover {
-  background-color: #005a9e; /* darker blue on hover */
+  background-color: #0EA5E9; /* darker blue on hover */
 }
 .window-toggle-active:hover {
-  background-color: #005a9e; /* darker blue on hover */
+  background-color: #0EA5E9; /* darker blue on hover */
 }
 
 .window-toggle:active {

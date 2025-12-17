@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../BuyStock/BuyStock.css"
 import { TradeLoadingState } from "../../../Components/LoadingPage/LoadingPage";
+import BackButton from "../../../Components/BackButton/BackButton";
 
 const SellStock = () => {
     const {state, dispatch} = useUser();
@@ -10,7 +11,7 @@ const SellStock = () => {
 
     const [symbol, setSymbol] = useState("");
     const [shares, setShares] = useState("");
-    //const [price, setPrice] = useState(0);
+    
     const [orderType, setOrderType] = useState("market");
 
     const [selectedStock, setSelectedStock] = useState(null);
@@ -139,6 +140,8 @@ const SellStock = () => {
     };
 
     return (
+        <div>
+        <BackButton/>
         <div className="buy-page">
             <div className="buy-container">
                 <div className="buy-header">
@@ -238,6 +241,7 @@ const SellStock = () => {
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     )
 }

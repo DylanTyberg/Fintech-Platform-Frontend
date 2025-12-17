@@ -2,12 +2,15 @@ import "../movers/movers.css";
 import { useEffect, useState } from "react";
 import StockChange from "../../Components/stock-change/stock-change";
 import LoadingSpinner from "../../Components/LoadingPage/LoadingPage";
+import { useNavigate } from "react-router-dom";
 
 const Movers = () => {
   const [gainers, setGainers] = useState([]);
   const [losers, setLosers] = useState([]);
   const [active, setActive] = useState([]);
   const [isGainers, setIsGainers] = useState(true);
+
+  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -29,7 +32,7 @@ const Movers = () => {
     try {
       setIsLoading(true);
       if (isMarketOpen()) {
-        // Trigger backend to refresh movers
+        
         const postResponse = await fetch(
           "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/movers",
           { method: "POST" }
@@ -41,7 +44,7 @@ const Movers = () => {
         }
       }
 
-      // Fetch movers
+   
       const getResponse = await fetch(
         "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/movers"
       );
@@ -53,12 +56,10 @@ const Movers = () => {
 
       const data = await getResponse.json();
 
-      // Separate gainers and losers
       setGainers(data.filter(stock => stock.direction === "gainers"));
       setActive(data.filter(stock => stock.direction === "gainers"));
       setLosers(data.filter(stock => stock.direction === "losers"));
 
-      // Fetch all names in batch
 
     } catch (error) {
       console.error("Error fetching movers:", error);
@@ -84,10 +85,10 @@ const Movers = () => {
         </div>
         <div className="movers-list">
             {active.map((stock) => (
-                <div className="stock-card"  key={stock.symbol}>
-                <h1 className= "stock-name">{stock.name}</h1>
-                <StockChange className="card-percent-change"  percentChange={stock.percentChange}/>
-                <h1 className="stock-symbol">{stock.symbol}</h1>
+                <div className="stock-card" onClick={() => navigate(`/stock-details/${stock.symbol}`)}  key={stock.symbol}>
+                  <h1 className= "stock-name">{stock.name}</h1>
+                  <StockChange className="card-percent-change"  percentChange={stock.percentChange}/>
+                  <h1 className="stock-symbol">{stock.symbol}</h1>
                 </div>
             ))}
         </div>

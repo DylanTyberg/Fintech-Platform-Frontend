@@ -83,7 +83,7 @@ const userReducer = (state, action) => {
         case "REMOVE_FROM_WATCHLIST":
             return {
                 ...state,
-                watchlist: state.watchlist.filter(item => item.id !== action.payload)
+                watchlist: state.watchlist.filter(item => item !== action.payload)
             };
         
         case "LOGOUT":
@@ -102,19 +102,19 @@ export const UserProvider = ({children}) => {
     }, [state]);
 
 
-    // Check for existing session on mount/refresh
+    
     useEffect(() => {
         const checkExistingSession = async () => {
             try {
-                // Check if user is authenticated
+                
                 const currentUser = await getCurrentUser();
                 console.log('Found existing session:', currentUser);
                 
-                // Get user attributes
+                
                 const userAttributes = await fetchUserAttributes();
                 console.log('User attributes:', userAttributes);
                 
-                // Set user in context
+                
                 dispatch({ 
                     type: 'SET_USER', 
                     payload: {
@@ -125,14 +125,11 @@ export const UserProvider = ({children}) => {
                     }
                 });
                 
-                // Optionally fetch watchlist here
-                // const watchlistRes = await fetch(`/api/watchlist/${userAttributes.sub}`);
-                // const watchlist = await watchlistRes.json();
-                // dispatch({ type: 'SET_WATCHLIST', payload: watchlist });
+               
                 
             } catch (error) {
                 console.log('No existing session:', error);
-                // User is not signed in, that's okay
+               
             } finally {
                 setIsLoading(false);
             }
@@ -141,9 +138,9 @@ export const UserProvider = ({children}) => {
         checkExistingSession();
     }, []);
 
-    // Show loading while checking session
+   
     if (isLoading) {
-        return <div>Loading...</div>; // Or your loading component
+        return <div>Loading...</div>; 
     }
 
     return (

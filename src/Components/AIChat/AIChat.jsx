@@ -10,7 +10,7 @@ const AIChat = ({pageContext = ""}) => {
   const chatEndRef = useRef(null);
 
   const {state} = useUser();
-  const userId = state.user.userId
+  const userId = state.user?.userId
 
   
   useEffect(() => {

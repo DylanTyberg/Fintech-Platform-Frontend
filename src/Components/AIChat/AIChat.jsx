@@ -66,7 +66,7 @@ const AIChat = ({pageContext = ""}) => {
         <div ref={chatEndRef} />
       </div>
 
-      {/* Input form */}
+      
       <form onSubmit={handleSubmit} className="ai-chat-form">
         <input
           type="text"

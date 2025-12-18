@@ -9,13 +9,13 @@ const IntradayChart = ({ data, height, width }) => {
   const [percentChange, setPercentChange] = useState(0);
   const [positive, setPositive] = useState(true);
 
-  // Create chart only once
+  
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
     const chart = createChart(chartContainerRef.current, {
-        width: chartContainerRef.current.clientWidth, // CHANGED: Use container width instead of prop
-        height: height || 250, // CHANGED: Use prop or default to 250
+        width: chartContainerRef.current.clientWidth, 
+        height: height || 250, 
         layout: {
           background: {color: "#22262e"},
           textColor: '#E0E0E0',
@@ -44,7 +44,7 @@ const IntradayChart = ({ data, height, width }) => {
     const lineSeries = chart.addSeries(AreaSeries)
     lineSeriesRef.current = lineSeries;
 
-    // NEW: Handle resize
+   
     const handleResize = () => {
       if (chartRef.current && chartContainerRef.current) {
         chartRef.current.applyOptions({
@@ -53,21 +53,21 @@ const IntradayChart = ({ data, height, width }) => {
       }
     };
 
-    // NEW: Use ResizeObserver
+    
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(chartContainerRef.current);
 
-    // NEW: Fallback to window resize
+    
     window.addEventListener('resize', handleResize);
 
     return () => {
-      resizeObserver.disconnect(); // NEW: Cleanup ResizeObserver
-      window.removeEventListener('resize', handleResize); // NEW: Cleanup event listener
+      resizeObserver.disconnect(); 
+      window.removeEventListener('resize', handleResize); 
       chart.remove();
     };
-  }, [height]); // CHANGED: Added height to dependency array
+  }, [height]); 
 
-  // Update data when `data` changes
+  
   useEffect(() => {
     if (lineSeriesRef.current && data && data.length > 0) {
       lineSeriesRef.current.setData(data);
@@ -102,7 +102,7 @@ const IntradayChart = ({ data, height, width }) => {
     }
   }, [data]);
 
-  // CHANGED: Added style to make container take full width
+ 
   return <div ref={chartContainerRef} style={{ width: '100%' }} />;
 };
 

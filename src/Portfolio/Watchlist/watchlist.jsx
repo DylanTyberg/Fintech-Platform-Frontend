@@ -37,7 +37,7 @@ const Watchlist = () => {
         try {
             setIsLoading(true);
             const response = await fetch(
-                "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/list",
+                `${process.env.REACT_APP_API_URL}/intraday/list`,
                 {
                 method: "POST",
                 headers: {
@@ -84,7 +84,7 @@ const Watchlist = () => {
         
     }
     const intradayPut = async (stock) => {
-        const response = await fetch(`https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/request?symbol=${encodeURIComponent(stock)}`,
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/intraday/request?symbol=${encodeURIComponent(stock)}`,
         { 
             method: "POST",
 
@@ -103,7 +103,7 @@ const Watchlist = () => {
 
             try {
                 const response = await fetch(
-                    "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/user",
+                    `${process.env.REACT_APP_API_URL}/user`,
                     {
                     method: "PUT",
                     headers: {
@@ -144,7 +144,7 @@ const Watchlist = () => {
         dispatch({type : "REMOVE_FROM_WATCHLIST", payload : symbol})
         console.log("dispatch ran")
 
-        const response = await fetch('https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/user/watchlist', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/user/watchlist`, {
             method: 'DELETE',
             headers: {
             'Content-Type': 'application/json',
@@ -221,7 +221,7 @@ const Watchlist = () => {
                         </div>
                         <input 
                             className="search-add-stocks" 
-                            placeholder="Search Popular stocks or enter symbol and submit" 
+                            placeholder="Search Popular stocks or enter symbol and click add" 
                             onChange={(e) => setFilterValue(e.target.value)}
                         />
                         <button className="add-button" type="button" onClick={() => handleClickStockAdd(filterValue.toUpperCase())}>Add</button>

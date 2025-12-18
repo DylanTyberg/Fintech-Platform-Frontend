@@ -24,7 +24,7 @@ const SellStock = () => {
         try {
             setIsLoading(true)
             const response = await fetch(
-                `https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/latest?symbol=${symbol}`,
+                `${process.env.REACT_APP_API_URL}/intraday/latest?symbol=${symbol}`,
                 {
                 method: "GET",
 
@@ -68,7 +68,7 @@ const SellStock = () => {
 
         try {
             const response = await fetch(
-                "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/user",
+                `${process.env.REACT_APP_API_URL}/user`,
                 {
                 method: "PUT",
                 headers: {
@@ -100,7 +100,7 @@ const SellStock = () => {
 
         try {
             const response = await fetch(
-                "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/user",
+                `${process.env.REACT_APP_API_URL}/user`,
                 {
                 method: "PUT",
                 headers: {

@@ -34,7 +34,7 @@ const Movers = () => {
       if (isMarketOpen()) {
         
         const postResponse = await fetch(
-          "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/movers",
+          `${process.env.REACT_APP_API_URL}/movers`,
           { method: "POST" }
         );
 
@@ -46,7 +46,7 @@ const Movers = () => {
 
    
       const getResponse = await fetch(
-        "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/movers"
+        `${process.env.REACT_APP_API_URL}/movers`
       );
 
       if (!getResponse.ok) {

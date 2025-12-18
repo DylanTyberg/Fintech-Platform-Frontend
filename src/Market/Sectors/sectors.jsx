@@ -14,7 +14,7 @@ const Sectors = () => {
         try {
             setIsLoading(true)
             const response = await fetch(
-                "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/list",
+                `${process.env.REACT_APP_API_URL}/intraday/list`,
                 {
                 method: "POST",
                 headers: {

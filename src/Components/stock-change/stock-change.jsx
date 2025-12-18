@@ -1,8 +1,8 @@
 import React from 'react';
-import './stock-change.css'; // Import the CSS file
+import './stock-change.css'; 
 
 const StockChange = ({className, percentChange }) => {
-  // Determine the class for the percent change (up, down, neutral)
+  
   const changeClass =
     percentChange > 0 ? 'up' :
     percentChange < 0 ? 'down' : 'neutral';

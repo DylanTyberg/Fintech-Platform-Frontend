@@ -41,7 +41,7 @@ const SignIn = () => {
                 })
 
                 const response = await fetch(
-                    `https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/user?userId=${userAttributes.sub}`,
+                    `${process.env.REACT_APP_API_URL}/user?userId=${userAttributes.sub}`,
                     {
                         method: "GET",
                         headers: {

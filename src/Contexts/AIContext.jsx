@@ -15,7 +15,7 @@ export const AIProvider = ({ children }) => {
     
     try {
       
-      const startResponse = await fetch('https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/ai-insight', {
+      const startResponse = await fetch(`${process.env.REACT_APP_API_URL}/ai-insight`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -38,7 +38,7 @@ export const AIProvider = ({ children }) => {
         await new Promise(resolve => setTimeout(resolve, 3000));
         
         const statusResponse = await fetch(
-          `https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/ai-insight/${jobId}`
+          `${process.env.REACT_APP_API_URL}/ai-insight/${jobId}`
         );
         const status = await statusResponse.json();
         

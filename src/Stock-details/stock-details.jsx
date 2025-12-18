@@ -21,7 +21,7 @@ const StockDetails = () => {
     const getDaily = async () => {
         setIsLoading(true)
         try {
-            const response = await fetch(`https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/daily?symbol=${encodeURIComponent(symbol)}`,
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/daily?symbol=${encodeURIComponent(symbol)}`,
                { 
                 method: "POST",
 
@@ -30,7 +30,7 @@ const StockDetails = () => {
             if (response.ok){
                 console.log(response);
                 try {
-                    const result = await fetch(`https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/daily/list`,
+                    const result = await fetch(`${process.env.REACT_APP_API_URL}/daily/list`,
                         { 
                             method: "POST",
                             headers: {
@@ -74,29 +74,34 @@ const StockDetails = () => {
     const getIntraday = async () => {
         setIsLoading(true)   
         try {
-            const response = await fetch(`https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/request?symbol=${encodeURIComponent(symbol)}`,
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/intraday/request?symbol=${encodeURIComponent(symbol)}`,
                { 
                 method: "POST",
 
                }
             )
             if (response.ok){
-                console.log(response);
+                console.log("response", response);
                 try {
-                    const result = await fetch(`https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday?symbol=${encodeURIComponent(symbol)}`,
+                    const result = await fetch(`${process.env.REACT_APP_API_URL}/intraday/list`,
                         { 
-                            method: "GET",
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ stocks: [symbol] })
 
                         }
                     )
+                    
                     if (result.ok){
                         const data = await result.json();
                         if (!error && data.length === 0) {
                             setError(`No Data Avaliable for ${symbol}`)
                         }
                         console.log(data);
-                        setStockData(data);
-                        const newChartData = data.map(({timestamp, close}) => ({
+                        setStockData(data[0]);
+                        const newChartData = data[0].map(({timestamp, close}) => ({
                             time: Math.floor(new Date(timestamp).getTime() / 1000),
                             value: close,
                         }))

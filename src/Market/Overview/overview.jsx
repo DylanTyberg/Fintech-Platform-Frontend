@@ -33,7 +33,7 @@ const Overview = () => {
     const getSparklineData = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch(`https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/sparkline-market`,
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/intraday/sparkline-market`,
                 {
                     method: "GET",
                 }

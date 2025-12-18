@@ -30,7 +30,7 @@ const TradeSimulator = () => {
         try {
             setIsLoading(true)
             const response = await fetch(
-                    "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/intraday/holdings-prices",
+                    `${process.env.REACT_APP_API_URL}/intraday/holdings-prices`,
                     {
                     method: "POST",
                     headers: {
@@ -90,7 +90,7 @@ const TradeSimulator = () => {
         }
         try {
             const response = await fetch(
-                "https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/user",
+                `${process.env.REACT_APP_API_URL}/user`,
                 {
                 method: "PUT",
                 headers: {
@@ -128,7 +128,7 @@ const TradeSimulator = () => {
             return; 
         }
         
-        const response = await fetch('https://as9ppqd9d8.execute-api.us-east-1.amazonaws.com/dev/user/portfolio-reset', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/user/portfolio-reset`, {
             method: 'DELETE',
             headers: {
             'Content-Type': 'application/json',

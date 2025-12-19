@@ -1,6 +1,6 @@
 # Serverless Financial Market Analysis & Paper Trading Platform
 
-A full-stack fintech application built on AWS serverless architecture, featuring near real-time market data for 8000+ stocks, AI-powered context aware investment recommendations, and paper trading simulation.
+A full-stack fintech application built on AWS serverless architecture, featuring near real-time market data for 4000+ stocks, AI-powered context aware investment recommendations, and paper trading simulation.
 
 🔗 [Live Site](https://fintech-platform.htytun.com) 
 

@@ -73,10 +73,7 @@ const SignUp = () => {
                         
                     </div>
                     <p className="password-hint">Must be at least 8 characters</p>
-                    <p className="password-hint">Must have at least 1 uppercase character</p>
-                    <p className="password-hint">Must have at least 1 special character</p>
-                    <p className="password-hint">Must have at least 1 numeric character</p>
-
+                    
                 </div>
                 
                 {isLoading ? (

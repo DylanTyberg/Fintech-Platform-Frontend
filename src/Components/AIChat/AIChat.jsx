@@ -12,7 +12,7 @@ const AIChat = ({pageContext = ""}) => {
   const {state} = useUser();
   const userId = state.user?.userId
 
-  
+  //
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversationHistory, isAILoading]);

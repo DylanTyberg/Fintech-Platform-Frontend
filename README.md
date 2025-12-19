@@ -2,11 +2,11 @@
 
 A full-stack fintech application built on AWS serverless architecture, featuring near real-time market data for 8000+ stocks, AI-powered context aware investment recommendations, and paper trading simulation.
 
-🔗 [Live Demo]() | 📹 [Video Demo]() 
+🔗 [Live Site](https://fintech-platform.htytun.com) 
 
 ## Features
 
-- 📈 **Near Real-time market data** for 8000+ stocks with interactive multi-timeframe charts
+- 📈 **Near Real-time market data** for 4000+ stocks with interactive multi-timeframe charts
 - 🤖 **AI-powered investment assistant** using Claude Sonnet 3.5 with portfolio-aware recommendations
 - 💰 **Paper trading simulator** with near real-time pricing and portfolio tracking
 - ⚡ **Serverless architecture** with automatic scaling and pay-per-execution cost model
@@ -19,7 +19,7 @@ A full-stack fintech application built on AWS serverless architecture, featuring
 
 1) Amazon S3  - Static hosting for React Frontend Client
 
-2) API Gateway - REST API with JWT authorization and Lambda proxy integration
+2) API Gateway - REST API with Lambda proxy integration
 
 3) Amazon Cognito - User authentication with token-based authorization
 
@@ -30,12 +30,12 @@ A full-stack fintech application built on AWS serverless architecture, featuring
 
 6) Lambda: Cache Read Functions - Serve stock data from DynamoDB cache 
 
-7) Lambda: Portfolio Updates - Updates DynamoDB to reflext portfolio changes
+7) Lambda: Portfolio Updates - Updates DynamoDB to reflect portfolio changes
 
-8) Lambda: Portfolio Query Functions - Aggregate user data endpoints (holdings, positions, 
+8) Lambda: Portfolio Query Functions - Gets user portfolio data (holdings, positions, 
    transaction history, performance metrics)
 
-9) Lambda: AI Chat Initiator - Creates async Bedrock request and returns polling token to 
+9) Lambda: AI Chat Initiator - Creates async Bedrock request and returns a jobId to 
    bypass API Gateway 29-second timeout
 
 10) Lambda: AI Polling Handler - Client polls this endpoint to check AI response completion 
@@ -54,7 +54,7 @@ A full-stack fintech application built on AWS serverless architecture, featuring
 15) DynamoDB: User Data - Partition key: userId; stores portfolios, holdings, trades, 
     watchlists with optimized sort keys for query patterns
 
-16) EventBridge - Scheduled rules triggering market data updates every 15 minutes during 
+16) EventBridge - Scheduled rules triggering market data updates every 5 minutes during 
     market hours
 
 17) Amazon Bedrock - Claude Sonnet 3.5 with function calling for personalized investment 
@@ -67,13 +67,13 @@ A full-stack fintech application built on AWS serverless architecture, featuring
 
 **Frontend**
 - React 18 with JavaScript
-- LightWeight from TradingView for interactive financial charts
+- LightWeight charts from TradingView for interactive financial charts
 - CSS for styling
 
 **Backend & Infrastructure**
 - AWS Lambda (Node.js) - Serverless compute
 - AWS API Gateway - REST API
-- Amazon DynamoDB - NoSQL database (2 tables)
+- Amazon DynamoDB - NoSQL database
 - Amazon Cognito - User authentication
 - Amazon Bedrock - AI integration (Claude Sonnet 3.5)
 - Amazon EventBridge - Scheduled data updates

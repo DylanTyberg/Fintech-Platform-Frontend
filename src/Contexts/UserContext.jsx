@@ -129,7 +129,7 @@ export const UserProvider = ({children}) => {
                 
             } catch (error) {
                 console.log('No existing session:', error);
-               
+                dispatch({ type: "LOGOUT" });
             } finally {
                 setIsLoading(false);
             }

@@ -22,11 +22,20 @@ const SignIn = () => {
     
 
 
-    const handleSignIn = async (e) => {
+    const handleSignIn = async (e, demo=false) => {
             e.preventDefault();
+           
             try {
+                let user = username;
+                let pass = password;
+                if (demo) {
+                    user = "dylan.tyberg+demo@gmail.com"
+                    pass = "demoUser"
+                    setUsername("dylan.tyberg+demo@gmail.com")
+                    setPassword("demoUser")
+                }
                 setIsLoading(true);
-                await signIn({username, password})
+                await signIn({username: user, password: pass})
                 setMessage("Sign-in successful!");
                 const userAttributes = await fetchUserAttributes();
                 console.log(userAttributes);
@@ -104,6 +113,7 @@ const SignIn = () => {
 
     return (
         <div className="sign-up-page">
+            <button className="add-to-watchlist-button" onClick={(e) => handleSignIn(e, true)}>Login as Demo User</button>
             {error && <div className="error-message">{error}</div>}
             <form className="sign-up-form" onSubmit={handleSignIn}>
                 <h1 className="sign-up-title">Sign In</h1>

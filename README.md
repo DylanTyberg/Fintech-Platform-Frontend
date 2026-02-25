@@ -4,6 +4,8 @@ A full-stack fintech application built on AWS serverless architecture, featuring
 
 🔗 [Live Site](https://fintech-platform.htytun.com) 
 
+🔗 [Backend/Infastructure Repository](https://github.com/DylanTyberg/Fintech-Platform-Backend)
+
 ## Features
 
 - 📈 **Near Real-time market data** for 4000+ stocks with interactive multi-timeframe charts

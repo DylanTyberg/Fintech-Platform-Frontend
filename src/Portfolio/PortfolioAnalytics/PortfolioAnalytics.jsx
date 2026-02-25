@@ -17,16 +17,12 @@ const PortfolioAnalytics = () => {
         }
         setChartData(
             state.snapshots.map((snapshot) => {
-                
                 const [month, day, year] = snapshot.date.split('-');
-                
-                const formattedDate = `${year}-${month}-${day}`;
-
                 return {
-                    time: formattedDate,
+                    time: `${year}-${month}-${day}`,
                     value: snapshot.portfolioValue,
                 };
-            })
+            }).sort((a, b) => a.time.localeCompare(b.time))
         );
     }, [state.snapshots])
 

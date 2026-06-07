@@ -5,6 +5,11 @@ import { useUser } from "../../Contexts/UserContext";
 import { fetchUserAttributes } from "aws-amplify/auth";
 import { TradeLoadingState } from "../../Components/LoadingPage/LoadingPage";
 import "./sign-in.css"
+import { fetchAuthSession } from 'aws-amplify/auth';
+
+// Get the current session token
+const session = await fetchAuthSession();
+const token = session.tokens?.idToken?.toString();
 
 
 const SignIn = () => {
@@ -54,6 +59,7 @@ const SignIn = () => {
                     {
                         method: "GET",
                         headers: {
+                            'Authorization': `Bearer ${token}`,
                             "Content-Type": "application/json",
                         }
                     }

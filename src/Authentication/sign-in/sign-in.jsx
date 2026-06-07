@@ -7,9 +7,6 @@ import { TradeLoadingState } from "../../Components/LoadingPage/LoadingPage";
 import "./sign-in.css"
 import { fetchAuthSession } from 'aws-amplify/auth';
 
-// Get the current session token
-const session = await fetchAuthSession();
-const token = session.tokens?.idToken?.toString();
 
 
 const SignIn = () => {
@@ -53,6 +50,9 @@ const SignIn = () => {
                         ...userAttributes      
                     }
                 })
+
+                const session = await fetchAuthSession();
+                const token = session.tokens?.idToken?.toString();
 
                 const response = await fetch(
                     `${process.env.REACT_APP_API_URL}/user?userId=${userAttributes.sub}`,

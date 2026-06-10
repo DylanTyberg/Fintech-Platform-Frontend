@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../BuyStock/BuyStock.css"
 import { TradeLoadingState } from "../../../Components/LoadingPage/LoadingPage";
 import BackButton from "../../../Components/BackButton/BackButton";
+import { fetchAuthSession } from "@aws-amplify/core";
 
 const BuyStock = () => {
     const {state, dispatch} = useUser();
@@ -67,11 +68,15 @@ const BuyStock = () => {
         
 
         try {
+
+            const session = await fetchAuthSession();
+            const token = session.tokens?.idToken?.toString();
             const response = await fetch(
                 `${process.env.REACT_APP_API_URL}/user`,
                 {
                 method: "PUT",
                 headers: {
+                    "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(params), 
@@ -99,11 +104,14 @@ const BuyStock = () => {
         
 
         try {
+            const session = await fetchAuthSession();
+            const token = session.tokens?.idToken?.toString();
             const response = await fetch(
                 `${process.env.REACT_APP_API_URL}/user`,
                 {
                 method: "PUT",
                 headers: {
+                    "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(cash_params), 

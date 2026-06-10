@@ -4,18 +4,19 @@ import { useUser } from '../../Contexts/UserContext';
 import ReactMarkdown from 'react-markdown';
 import './AIChat.css';
 
-const AIChat = ({pageContext = ""}) => {
-  const { askAI, conversationHistory, isAILoading, clearConversation } = useAI();
+const AIChat = ({ pageContext = "" }) => {
+  const { askAI, clearConversation, isAILoading } = useAI();
+  
+  // Local display state only — not sent to backend
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const chatEndRef = useRef(null);
 
-  const {state} = useUser();
-  const userId = state.user?.userId
+  const { state } = useUser();
 
-  //
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [conversationHistory, isAILoading]);
+  }, [messages, isAILoading]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,50 +24,63 @@ const AIChat = ({pageContext = ""}) => {
 
     const prompt = input;
     setInput('');
-    
+
+    // Add user message to display immediately
+    setMessages(prev => [...prev, { role: 'user', content: prompt }]);
+
     try {
-      await askAI(userId, prompt, pageContext);
+      // askAI no longer needs userId — extracted from JWT server-side
+      const response = await askAI(prompt, pageContext);
+      
+      // Add AI response to display
+      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
     } catch (error) {
       console.error('Failed to get AI response:', error);
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: 'Sorry, something went wrong. Please try again.' 
+      }]);
     }
+  };
+
+  const handleClear = () => {
+    setMessages([]);
+    clearConversation(); // resets sessionId server-side
   };
 
   return (
     <div className="ai-chat-container">
-    
       <div className="ai-chat-history">
-        {conversationHistory.prompts.length === 0 ? (
+        {messages.length === 0 ? (
           <p className="ai-chat-empty">
             Ask me anything about your portfolio or the market...
           </p>
         ) : (
-          conversationHistory.prompts.map((prompt, i) => (
+          messages.map((message, i) => (
             <div key={i} className="ai-chat-exchange">
-             
-              <div className="ai-chat-user-message">
-                <strong></strong> {prompt}
-              </div>
-              
-              
-              <div className="ai-chat-ai-message">
-                <strong className="ai-chat-ai-label">AI:</strong>
-                <ReactMarkdown>{conversationHistory.responses[i]}</ReactMarkdown>
-              </div>
+              {message.role === 'user' ? (
+                <div className="ai-chat-user-message">
+                  <strong></strong> {message.content}
+                </div>
+              ) : (
+                <div className="ai-chat-ai-message">
+                  <strong className="ai-chat-ai-label">AI:</strong>
+                  <ReactMarkdown>{message.content}</ReactMarkdown>
+                </div>
+              )}
             </div>
           ))
         )}
-        
-        
+
         {isAILoading && (
           <div className="ai-chat-loading">
             <strong className="ai-chat-ai-label">AI:</strong> Thinking...
           </div>
         )}
-        
+
         <div ref={chatEndRef} />
       </div>
 
-      
       <form onSubmit={handleSubmit} className="ai-chat-form">
         <input
           type="text"
@@ -76,7 +90,7 @@ const AIChat = ({pageContext = ""}) => {
           disabled={isAILoading}
           className="ai-chat-input"
         />
-        
+
         <button
           type="submit"
           disabled={isAILoading || !input.trim()}
@@ -84,11 +98,11 @@ const AIChat = ({pageContext = ""}) => {
         >
           {isAILoading ? 'Sending...' : 'Send'}
         </button>
-        
-        {conversationHistory.prompts.length > 0 && (
+
+        {messages.length > 0 && (
           <button
             type="button"
-            onClick={clearConversation}
+            onClick={handleClear}
             disabled={isAILoading}
             className="ai-chat-clear-btn"
           >
@@ -98,6 +112,6 @@ const AIChat = ({pageContext = ""}) => {
       </form>
     </div>
   );
-}
+};
 
 export default AIChat;

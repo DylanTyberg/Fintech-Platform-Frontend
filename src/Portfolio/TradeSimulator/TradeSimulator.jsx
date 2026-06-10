@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown'
 import { useAI } from "../../Contexts/AIContext";
 import AIChat from "../../Components/AIChat/AIChat";
 import {signOut} from 'aws-amplify/auth';
+import { fetchAuthSession } from "aws-amplify/auth";
 
 const TradeSimulator = () => {
     const {state, dispatch} = useUser();
@@ -89,11 +90,15 @@ const TradeSimulator = () => {
                 
         }
         try {
+            const session = await fetchAuthSession();
+            const token = session.tokens?.idToken?.toString();
+
             const response = await fetch(
                 `${process.env.REACT_APP_API_URL}/user`,
                 {
                 method: "PUT",
                 headers: {
+                    "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(params), 
@@ -127,10 +132,14 @@ const TradeSimulator = () => {
         if (!confirmed) {
             return; 
         }
+
+        const session = await fetchAuthSession();
+        const token = session.tokens?.idToken?.toString();
         
         const response = await fetch(`${process.env.REACT_APP_API_URL}/user/portfolio-reset`, {
             method: 'DELETE',
             headers: {
+            "Authorization": `Bearer ${token}`,
             'Content-Type': 'application/json',
             },
             body: JSON.stringify({

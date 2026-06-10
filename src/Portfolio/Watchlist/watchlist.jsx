@@ -5,6 +5,7 @@ import StockChartCard from "../../Components/StockChartCard/StockChartCard";
 import "../Watchlist/watchlist.css"
 import LoadingSpinner from "../../Components/LoadingPage/LoadingPage";
 import AIChat from "../../Components/AIChat/AIChat";
+import { fetchAuthSession } from "@aws-amplify/core";
 
 const Watchlist = () => {
     const {state, dispatch} = useUser();
@@ -102,11 +103,14 @@ const Watchlist = () => {
             
 
             try {
+                const session = await fetchAuthSession();
+                const token = session.tokens?.idToken?.toString();
                 const response = await fetch(
                     `${process.env.REACT_APP_API_URL}/user`,
                     {
                     method: "PUT",
                     headers: {
+                        "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify(params), 
@@ -144,9 +148,12 @@ const Watchlist = () => {
         dispatch({type : "REMOVE_FROM_WATCHLIST", payload : symbol})
         console.log("dispatch ran")
 
+        const session = await fetchAuthSession();
+        const token = session.tokens?.idToken?.toString();
         const response = await fetch(`${process.env.REACT_APP_API_URL}/user/watchlist`, {
             method: 'DELETE',
             headers: {
+            "Authorization": `Bearer ${token}`,
             'Content-Type': 'application/json',
             },
             body: JSON.stringify({

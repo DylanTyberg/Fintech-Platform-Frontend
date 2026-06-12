@@ -9,7 +9,7 @@ const PortfolioAnalytics = () => {
     const {state, dispatch} = useUser();
     const [chartData, setChartData] = useState([])
 
-    console.log(state)
+    //console.log(state)
 
     useEffect(() => {
         if (!state.snapshots){

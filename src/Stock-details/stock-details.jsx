@@ -28,7 +28,7 @@ const StockDetails = () => {
                }
             )
             if (response.ok){
-                console.log(response);
+                //console.log(response);
                 try {
                     const result = await fetch(`${process.env.REACT_APP_API_URL}/daily/list`,
                         { 
@@ -41,7 +41,7 @@ const StockDetails = () => {
                     )
                     if (result.ok){
                         const data = await result.json();
-                        console.log(data.results[0].data)
+                        //console.log(data.results[0].data)
                         setStockData(data.results[0].data);
 
                         const sortedData = data.results[0].data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
@@ -81,7 +81,7 @@ const StockDetails = () => {
                }
             )
             if (response.ok){
-                console.log("response", response);
+                //console.log("response", response);
                 try {
                     const result = await fetch(`${process.env.REACT_APP_API_URL}/intraday/list`,
                         { 
@@ -99,7 +99,7 @@ const StockDetails = () => {
                         if (!error && data.length === 0) {
                             setError(`No Data Avaliable for ${symbol}`)
                         }
-                        console.log(data);
+                        //console.log(data);
                         setStockData(data[0]);
                         const newChartData = data[0].map(({timestamp, close}) => ({
                             time: Math.floor(new Date(timestamp).getTime() / 1000),
@@ -140,7 +140,7 @@ const StockDetails = () => {
         if (index === 1){
             
             const newChartData = chartDataDaily.slice(-30)
-            console.log(newChartData)
+            //console.log(newChartData)
             setChartData(newChartData)
             setActiveChart([false, true, false, false])
         } 

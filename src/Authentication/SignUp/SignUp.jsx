@@ -30,9 +30,9 @@ const SignUp = () => {
             })
             setMessage("Sign-up successful! Please check your email to confirm.");
             navigate('/confirm-email', { state: { username: email } });
-            console.log({ isSignUpComplete, userId, nextStep });
+            
         } catch (error) {
-            console.log(error)
+            
             setError(error.message || 'Failed to sign up. Please try again.')
         } finally {
             setIsLoading(false)

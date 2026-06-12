@@ -33,8 +33,8 @@ const Watchlist = () => {
     }, [])
 
     const getData = async (stocks) => {
-        console.log("stocks", stocks)
-        console.log(state.watchlist)
+        //console.log("stocks", stocks)
+        //console.log(state.watchlist)
         try {
             setIsLoading(true);
             const response = await fetch(
@@ -54,7 +54,7 @@ const Watchlist = () => {
             }
 
             const result = await response.json();
-            console.log(result);
+            //console.log(result);
             const allChartData = stocks.map((sym, i) => {
                 dispatch({type : "ADD_TO_WATCHLIST", payload : sym})
                 const data = result[i] || [];
@@ -63,7 +63,7 @@ const Watchlist = () => {
                     value: close,
                 }));
             });
-            console.log([...chartData, ...allChartData])
+            //console.log([...chartData, ...allChartData])
             setChartData([...chartData, ...allChartData]);
 
         } catch (error) {
@@ -121,11 +121,11 @@ const Watchlist = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const result = await response.json();
-                console.log(result);
+                //console.log(result);
 
             } catch (error)
             {
-                console.log(error);
+                //console.log(error);
             }
         }
     }
@@ -146,7 +146,7 @@ const Watchlist = () => {
 
     const deleteFromWatchlist = async (symbol) => {
         dispatch({type : "REMOVE_FROM_WATCHLIST", payload : symbol})
-        console.log("dispatch ran")
+        //console.log("dispatch ran")
 
         const session = await fetchAuthSession();
         const token = session.tokens?.idToken?.toString();
@@ -162,7 +162,7 @@ const Watchlist = () => {
             symbol: symbol
             })
         });
-        console.log(response.json())
+        //console.log(response.json())
         window.location.reload();
         
         

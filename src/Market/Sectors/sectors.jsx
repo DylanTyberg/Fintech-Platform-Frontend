@@ -47,7 +47,7 @@ const Sectors = () => {
 
             
         } catch (error) {
-            console.log(error.message)
+            //console.log(error.message)
         } finally {
             setIsLoading(false)
         }

@@ -26,7 +26,7 @@ const AllStocks = () => {
             <div className="stocks-list">
                 {
                     filteredStocks.map((stock) => (
-                        <div className="stock-card" onClick={() => {navigate(`/stock-details/${stock.Symbol}`); console.log(stock.Symbol)}}>
+                        <div className="stock-card" onClick={() => {navigate(`/stock-details/${stock.Symbol}`); }}>
                             <h1 className="stock-symbol">{stock.Symbol}</h1>
                             <h1 className="stock-name">{stock.Security}</h1>
                         </div>

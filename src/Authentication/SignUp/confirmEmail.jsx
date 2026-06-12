@@ -18,7 +18,7 @@ const ConfirmEmail = () => {
                 username,
                 confirmationCode: code
             });
-            console.log('Confirmation successful:', { isSignUpComplete, nextStep });
+            
             navigate("/sign-in")
         } catch (error) {
             console.error('Confirmation error:', error);

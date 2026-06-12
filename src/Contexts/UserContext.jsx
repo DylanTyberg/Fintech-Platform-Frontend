@@ -108,11 +108,11 @@ export const UserProvider = ({children}) => {
             try {
                 
                 const currentUser = await getCurrentUser();
-                console.log('Found existing session:', currentUser);
+                //console.log('Found existing session:', currentUser);
                 
                 
                 const userAttributes = await fetchUserAttributes();
-                console.log('User attributes:', userAttributes);
+                //console.log('User attributes:', userAttributes);
                 
                 
                 dispatch({ 
@@ -128,7 +128,7 @@ export const UserProvider = ({children}) => {
                
                 
             } catch (error) {
-                console.log('No existing session:', error);
+                //console.log('No existing session:', error);
                 dispatch({ type: "LOGOUT" });
             } finally {
                 setIsLoading(false);

@@ -45,22 +45,22 @@ const TradeSimulator = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const result = await response.json();
-                console.log("price info", result);
+                //console.log("price info", result);
                 setPriceInfo(result);
                 
                 const holdingsValue = state.holdings.reduce((total, holding) => {
                     const info = result.find(item => item.symbol === holding.symbol);
                     const currentPrice = info?.lastPrice.close || 0;
-                    console.log("current", currentPrice)
+                    //console.log("current", currentPrice)
                     return total + (holding.quantity * currentPrice);
                 }, 0);
-                console.log("holdings val", holdingsValue)
+                //console.log("holdings val", holdingsValue)
                 const totalPortfolioValue = holdingsValue + state.cash;
                 setPortfolioValue(totalPortfolioValue.toFixed(2));
 
             } catch (error)
             {
-                console.log(error);
+                //console.log(error);
             } finally {
                 setIsLoading(false)
             }
@@ -110,11 +110,11 @@ const TradeSimulator = () => {
             }
             const result = await response.json();
             setIntroForm(false);
-            console.log(result);
+            //console.log(result);
 
 
         } catch (error) {
-            console.log(error);
+            //console.log(error);
         }
     }
 
@@ -148,7 +148,7 @@ const TradeSimulator = () => {
         });
         
         const result = await response.json();
-        console.log(`Deleted ${result.deletedCount} items`);
+        //console.log(`Deleted ${result.deletedCount} items`);
         await signOut();
         dispatch({type: "LOGOUT"});
         window.location.href = '/sign-in';

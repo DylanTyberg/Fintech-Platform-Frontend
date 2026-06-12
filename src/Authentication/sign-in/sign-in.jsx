@@ -40,7 +40,7 @@ const SignIn = () => {
                 await signIn({username: user, password: pass})
                 setMessage("Sign-in successful!");
                 const userAttributes = await fetchUserAttributes();
-                console.log(userAttributes);
+                
                 
                 
                 dispatch({type: "SET_USER", 
@@ -110,7 +110,7 @@ const SignIn = () => {
                 navigate('/');
 
             } catch (error) {
-                console.log(error)
+                
                 setError(error.message || 'Failed to sign in. Please try again.')
             } finally {
                 setIsLoading(false);

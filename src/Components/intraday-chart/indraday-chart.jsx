@@ -76,9 +76,9 @@ const IntradayChart = ({ data, height, width }) => {
       }
 
       const firstValue = data[0].value;
-      console.log(firstValue)
+      
       const lastValue = data[data.length - 1].value;
-      console.log(lastValue)
+      
       const calculatedPercentChange = ((lastValue - firstValue) / firstValue) * 100;
       
       const isPositive = calculatedPercentChange >= 0;

@@ -33,10 +33,10 @@ const BuyStock = () => {
             )
 
             const result = await response.json();
-            console.log(result);
+            //console.log(result);
             setSelectedStock(result);
         } catch (error) {
-            console.log(error)
+            //console.log(error)
         } finally {
             setIsLoading(false);
         }
@@ -87,11 +87,11 @@ const BuyStock = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const result = await response.json();
-            console.log(result);
+            //console.log(result);
 
         } catch (error)
         {
-            console.log(error);
+            //console.log(error);
         }
 
         const cash_params = {
@@ -122,11 +122,11 @@ const BuyStock = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const result = await response.json();
-            console.log(result);
+            //console.log(result);
 
         } catch (error)
         {
-            console.log(error);
+            //console.log(error);
         }
 
 

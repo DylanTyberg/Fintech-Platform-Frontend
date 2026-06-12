@@ -41,12 +41,12 @@ const Overview = () => {
                 }
             )
             const result = await response.json();
-            console.log(result);
+            //console.log(result);
             setIndexData(result.slice(0, 3));
             setSectorData(result.slice(3, 15));
         } catch (error)
         {
-            console.log(error)
+            //console.log(error)
         }finally {
             setIsLoading(false); 
         }

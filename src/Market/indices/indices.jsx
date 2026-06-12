@@ -43,7 +43,7 @@ const Indices = () => {
             const result = await response.json();
             
 
-            console.log("API result:", result);
+            //console.log("API result:", result);
             
             setDataSPY(result[0])
             setDataDIA(result[1])
@@ -53,7 +53,7 @@ const Indices = () => {
                 time: Math.floor(new Date(timestamp).getTime() / 1000),
                 value: close,
             }));
-            console.log(chartSPY[0])
+            //console.log(chartSPY[0])
             setChartDataSPY(chartSPY);
 
             const chartDIA = result[1].map(({ timestamp, close }) => ({
@@ -70,7 +70,7 @@ const Indices = () => {
 
             
         } catch (error) {
-            console.log(error.message)
+            //console.log(error.message)
         } finally {
             setIsLoading(false)
         }

@@ -1,18 +1,34 @@
 import "../Sectors/sectors.css"
 import StockChartCard from "../../Components/StockChartCard/StockChartCard";
+import MiniStockCard from "../../Components/MiniStockCard/MiniStockCard";
 import { useState, useEffect } from "react";
-import LoadingSpinner from "../../Components/LoadingPage/LoadingPage";
 import AIChat from "../../Components/AIChat/AIChat";
 
-const Sectors = () => {
-    const stocks = ["XLK", "XLE", "XLF", "XLV", "XLI", "XLB", "XLU", "XLRE", "XLC", "XLY", "XLP"];
-    const [chartData, setChartData] = useState([]);
+const SECTORS = [
+    { symbol: "XLK", name: "Technology" },
+    { symbol: "XLE", name: "Energy" },
+    { symbol: "XLF", name: "Financials" },
+    { symbol: "XLV", name: "Healthcare" },
+    { symbol: "XLI", name: "Industrials" },
+    { symbol: "XLB", name: "Materials" },
+    { symbol: "XLU", name: "Utilities" },
+    { symbol: "XLRE", name: "Real Estate" },
+    { symbol: "XLC", name: "Communication Services" },
+    { symbol: "XLY", name: "Consumer Discretionary" },
+    { symbol: "XLP", name: "Consumer Services" },
+];
 
+const nameForSymbol = (symbol) => SECTORS.find((s) => s.symbol === symbol)?.name ?? symbol;
+
+const Sectors = () => {
+    const [chartDataMap, setChartDataMap] = useState({});
+    const [heroSymbol, setHeroSymbol] = useState(SECTORS[0].symbol);
     const [isLoading, setIsLoading] = useState(true);
 
     const getData = async () => {
         try {
             setIsLoading(true)
+            const symbols = SECTORS.map((s) => s.symbol);
             const response = await fetch(
                 `${process.env.REACT_APP_API_URL}/intraday/list`,
                 {
@@ -20,7 +36,7 @@ const Sectors = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify( {stocks} ), 
+                body: JSON.stringify( {stocks: symbols} ), 
                 }
             );
 
@@ -29,23 +45,18 @@ const Sectors = () => {
             }
 
             const result = await response.json();
-            
 
-
-            const allChartData = stocks.map((sym, i) => {
-                const data = result[i] || [];
-                return data.map(({ timestamp, close }) => ({
+            const newEntries = {};
+            symbols.forEach((symbol, i) => {
+                const rows = result[i] || [];
+                newEntries[symbol] = rows.map(({ timestamp, close }) => ({
                     time: Math.floor(new Date(timestamp).getTime() / 1000),
                     value: close,
                 }));
             });
 
-            setChartData(allChartData);
+            setChartDataMap(newEntries);
 
-
-            
-
-            
         } catch (error) {
             //console.log(error.message)
         } finally {
@@ -57,26 +68,53 @@ const Sectors = () => {
         getData();
     }, [])
 
-    if (isLoading){
-        return <LoadingSpinner message="Loading sector data..."/>
-    }
-    
+    const heroChartData = chartDataMap[heroSymbol];
+    const secondarySectors = SECTORS.filter((s) => s.symbol !== heroSymbol);
+
     return (
-        <div>
-            <div className="indices-list">
-                {chartData.length > 0 && <StockChartCard symbol={"XLK"} title={"Technology"} chartData={chartData[0]} delay={0}/>}
-                {chartData.length > 0 && <StockChartCard symbol={"XLE"} title={"Energy"} chartData={chartData[1]} delay={0}/>}
-                {chartData.length > 0 && <StockChartCard symbol={"XLF"} title={"Financials"} chartData={chartData[2]} delay={0}/>}
-                {chartData.length > 0 && <StockChartCard symbol={"XLV"} title={"Healthcare" } chartData={chartData[3]} delay={1000}/>}
-                {chartData.length > 0 && <StockChartCard symbol={"XLI"} title={"Industrials"} chartData={chartData[4]} delay={1000}/>}
-                {chartData.length > 0 && <StockChartCard symbol={"XLB"} title={"Materials"} chartData={chartData[5]} delay={1000}/>}
-                {chartData.length > 0 && <StockChartCard symbol={"XLU"} title={"Utilities"} chartData={chartData[6]} delay={2000}/>}
-                {chartData.length > 0 && <StockChartCard symbol={"XLRE"} title={"Real Estate"} chartData={chartData[7]} delay={2000}/>}
-                {chartData.length > 0 && <StockChartCard symbol={"XLC"} title={"Communication Services"} chartData={chartData[8]} delay={2000}/>}
-                {chartData.length > 0 && <StockChartCard symbol={"XLY"} title={"Consumer Discretionary"} chartData={chartData[9]} delay={3000}/>}
-                {chartData.length > 0 && <StockChartCard symbol={"XLP"} title={"Consumer Services"} chartData={chartData[10]} delay={3000}/>}
-            </div>
-            <AIChat pageContext="(The User is currently on sectors page showing all sector etfs)"/>
+        <div className="sectors-page">
+            {isLoading ? (
+                <>
+                    <div className="sectors-skeleton-hero">
+                        <div className="skeleton-line" style={{ width: "30%" }} />
+                        <div className="skeleton-block" style={{ height: 340 }} />
+                    </div>
+                    <div className="sectors-secondary">
+                        {[...Array(10)].map((_, i) => (
+                            <div key={i} className="sectors-skeleton-card">
+                                <div className="skeleton-line" style={{ width: "55%" }} />
+                                <div className="skeleton-line" style={{ width: "30%", marginTop: 6 }} />
+                                <div className="skeleton-block" style={{ height: 28, marginTop: 10 }} />
+                            </div>
+                        ))}
+                    </div>
+                </>
+            ) : (
+                <>
+                    {heroChartData && (
+                        <div className="sectors-hero">
+                            <StockChartCard
+                                symbol={heroSymbol}
+                                title={nameForSymbol(heroSymbol)}
+                                chartData={heroChartData}
+                                variant="hero"
+                            />
+                        </div>
+                    )}
+                    <div className="sectors-secondary">
+                        {secondarySectors.map((sector) => (
+                            <MiniStockCard
+                                key={sector.symbol}
+                                symbol={sector.symbol}
+                                name={sector.name}
+                                chartData={chartDataMap[sector.symbol] ?? []}
+                                onClick={() => setHeroSymbol(sector.symbol)}
+                            />
+                        ))}
+                    </div>
+                </>
+            )}
+            <AIChat pageContext="(The user is currently on the sectors page showing all sector ETFs)"/>
         </div>
     )
 }

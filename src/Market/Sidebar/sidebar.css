@@ -1,69 +1,85 @@
 .layout {
-  display: flex;                /* Puts sidebar on the left, content on the right */
-  height: calc(100vh - 60px);   /* Adjust for nav bar height if it's fixed */
+  display: flex;
+  height: calc(100vh - 60px); /* matches .nav-bar height in navigation-bar.css */
 }
 
 .sidebar {
-  width: 10%;
-  background-color: #1a1d23;
-  color: #E0E0E0;
+  width: 208px;           /* fixed, not 10% — a % width sidebar resizes
+                              unpredictably across screen sizes */
+  flex-shrink: 0;
+  background-color: var(--surface);
+  color: var(--text);
   display: flex;
   flex-direction: column;
-  padding: 1rem;
-  border-right: 1px solid #2d323b;        /* Subtle separator */
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
-}
-.sidebar-items{
-    margin-top: 25px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  padding: 14px 10px;
+  border-right: 1px solid var(--border-soft);
+  overflow-y: auto;
 }
 
-.sidebar-link {
-  display: block;                 /* makes it behave like a button */
-  color: #9CA3AF;                 /* light text on dark bg */
-  background-color: #2d323b;      /* matches your button inactive bg */
-  padding: 10px 16px;             /* vertical + horizontal padding */
-  margin-bottom: 8px;             /* spacing between links */
+.side-group {
+  margin-bottom: 18px;
+}
+
+.side-group:last-child {
+  margin-bottom: 0;
+}
+
+.side-title {
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-weight: 600;
+  padding: 4px 10px 8px;
+}
+
+.sidebar-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border-radius: 5px;
+  border-left: 2px solid transparent;
+  color: var(--text-dim);
   text-decoration: none;
-  font-size: 16px;
-  border: 1px solid #4a4a4a;     /* subtle border like buttons */
-  border-radius: 4px;             /* slightly rounded corners, rectangular */
-  transition: all 0.2s ease;
-}
-.sidebar-link-active{
-  display: block;                 /* makes it behave like a button */
-  color: #E0E0E0;                 /* light text on dark bg */
-  background-color: #0EA5E9;      /* matches your button inactive bg */
-  padding: 10px 16px;             /* vertical + horizontal padding */
-  margin-bottom: 8px;             /* spacing between links */
-  text-decoration: none;
-  font-size: 16px;
-  border: 1px solid #005a9e;     /* subtle border like buttons */
-  border-radius: 4px;             /* slightly rounded corners, rectangular */
-  transition: all 0.2s ease;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-
-.sidebar-link:hover {
-  background-color: #3a404a;      /* Lighter, more contrast */
-  border-color: #4a5462;
-  transform: translateX(2px);     /* Subtle slide right on hover */
-  color: #E5e7EB;
+.sidebar-item svg {
+  flex-shrink: 0;
+  opacity: 0.75;
 }
 
-.sidebar-link-active:hover {
-  background-color: #0284C7;      /* Slightly darker blue */
-  border-color: #0369A1;
-  box-shadow: 0 0 16px rgba(14, 165, 233, 0.4);  /* Stronger glow */
+.sidebar-item:hover {
+  background-color: var(--surface-2);
+  color: var(--text);
 }
+
+.sidebar-item.active {
+  background-color: var(--surface-2);
+  border-left-color: var(--accent);
+  color: var(--text);
+}
+
+.sidebar-item.active svg {
+  opacity: 1;
+  stroke: var(--accent);
+}
+
 .main-content {
   flex: 1;
-  background-color: #0f1419;
-  background-image: 
-    radial-gradient(circle at 20% 30%, rgba(14, 165, 233, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(14, 165, 233, 0.02) 0%, transparent 50%);
-  padding: 2rem;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(41, 98, 255, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(41, 98, 255, 0.02) 0%, transparent 50%);
+  padding: 24px;
   overflow-y: auto;
 }

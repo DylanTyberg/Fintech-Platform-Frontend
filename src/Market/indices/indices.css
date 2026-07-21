@@ -1,86 +1,131 @@
-
-
 .indices-page {
     padding: 24px;
-    max-width: 1600px; 
-    margin: 0 auto; 
-    width: 100%; 
-}
-
-.indices-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 24px;
-    width: 100%; 
-}
-
-.indices-stock-chart {
-    background-color: #22262e;
+    max-width: 1600px;
+    margin: 0 auto;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    width: 90%; 
-    justify-content: center;
-    gap: 0;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    border-radius: 8px;
-    position: relative;
-    border: 1px solid #3a404a;
-    padding: 16px;
-    transition: all 0.2s ease;
-    min-width: 0; 
+    gap: 20px;
+}
+
+.indices-hero {
+    width: 100%;
+}
+
+.indices-secondary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    width: 100%;
+}
+
+/* ── Card ────────────────────────────────────────────────────────────────── */
+.indices-stock-chart {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+    min-width: 0;
 }
 
 .indices-stock-chart:hover {
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.2);
-    transform: translateY(-2px);
-    border-color: #0EA5E9;
+    border-color: var(--accent);
 }
 
-.index-page-change {
-    position: absolute;
-    top: 15px;
-    right: 15px;
+/* Hero gets a permanent accent border — it's the focused instrument,
+   not just another card in a hover state. */
+.indices-stock-chart--hero {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent-dim);
 }
 
-.title-date {
+.chart-card-head {
     display: flex;
-    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 2px;
 }
 
 .chart-title {
-    margin-left: 20px;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
 }
 
-.chart-date {
-    margin-top: 20px;
-    margin-bottom: 20px;
+.chart-title--hero {
+    font-size: 20px;
+}
+
+.chart-symbol {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-faint);
+    margin-top: 2px;
+}
+
+.chart-price {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 2px 0 10px;
+}
+
+.chart-price--hero {
+    font-size: 27px;
+    margin: 4px 0 14px;
 }
 
 .chart {
-    width: 100%; 
-    height: 250px; 
+    width: 100%;
 }
 
+/* ── Skeleton ────────────────────────────────────────────────────────────── */
+.indices-skeleton-hero,
+.indices-skeleton-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+}
 
+.skeleton-line {
+    height: 12px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 50%, var(--surface-2) 75%);
+    background-size: 200% 100%;
+    animation: indices-shimmer 1.5s infinite;
+}
+
+.skeleton-block {
+    border-radius: 6px;
+    margin-top: 10px;
+    background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 50%, var(--surface-2) 75%);
+    background-size: 200% 100%;
+    animation: indices-shimmer 1.5s infinite;
+}
+
+@keyframes indices-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (min-width: 1920px) {
-    .indices-list {
-        grid-template-columns: repeat(4, 1fr); 
-    }
-}
-
-@media (max-width: 1400px) {
-    .indices-list {
-        grid-template-columns: repeat(2, 1fr); 
+    .indices-secondary {
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
 @media (max-width: 900px) {
-    .indices-list {
-        grid-template-columns: 1fr; 
+    .indices-secondary {
+        grid-template-columns: 1fr;
     }
-    
+
     .indices-page {
         padding: 16px;
     }

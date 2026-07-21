@@ -1,35 +1,55 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { AreaSeries, createChart, LineSeries } from 'lightweight-charts';
-import {DateTime} from "luxon"
+import React, { useEffect, useRef } from 'react';
+import { AreaSeries, createChart, LineStyle } from 'lightweight-charts';
+import { DateTime } from "luxon";
+
+
+const COLORS = {
+  background: "#131722", // var(--surface)
+  text: "#d1d4dc",       // var(--text)
+  grid: "#1b1f2b",       // var(--border-soft)
+  border: "#232734",     // var(--border)
+  positive: "#089981",   // var(--pos)
+  negative: "#f23645",   // var(--neg)
+  accent: "#2962ff",     // var(--accent)
+};
 
 const IntradayChart = ({ data, height, width }) => {
   const chartContainerRef = useRef();
   const chartRef = useRef();
   const lineSeriesRef = useRef();
-  const [percentChange, setPercentChange] = useState(0);
-  const [positive, setPositive] = useState(true);
 
-  
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
     const chart = createChart(chartContainerRef.current, {
-        width: chartContainerRef.current.clientWidth, 
-        height: height || 250, 
-        layout: {
-          background: {color: "#22262e"},
-          textColor: '#E0E0E0',
-        },
-        timeScale: {
+      width: width || chartContainerRef.current.clientWidth,
+      height: height || 250,
+      layout: {
+        background: { color: COLORS.background },
+        textColor: COLORS.text,
+      },
+      grid: {
+        vertLines: { color: COLORS.grid },
+        horzLines: { color: COLORS.grid },
+      },
+      rightPriceScale: {
+        borderColor: COLORS.border,
+      },
+      crosshair: {
+        vertLine: { color: COLORS.accent, labelBackgroundColor: COLORS.accent },
+        horzLine: { color: COLORS.accent, labelBackgroundColor: COLORS.accent },
+      },
+      timeScale: {
+        borderColor: COLORS.border,
         timeVisible: true,
         secondsVisible: false,
         tickMarkFormatter: (time) => {
-        if (typeof time === 'number') {
-          return DateTime
-            .fromSeconds(time, { zone: 'utc' })
-            .setZone('America/New_York')
-            .toFormat('hh:mm a');
-        }
+          if (typeof time === 'number') {
+            return DateTime
+              .fromSeconds(time, { zone: 'utc' })
+              .setZone('America/New_York')
+              .toFormat('hh:mm a');
+          }
           if (typeof time === 'string') {
             return DateTime
               .fromISO(time, { zone: 'utc' })
@@ -41,10 +61,15 @@ const IntradayChart = ({ data, height, width }) => {
     });
     chartRef.current = chart;
 
-    const lineSeries = chart.addSeries(AreaSeries)
+
+    const lineSeries = chart.addSeries(AreaSeries, {
+      lastValueVisible: true,
+      priceLineVisible: true,
+      priceLineStyle: LineStyle.Dashed,
+      priceLineWidth: 1,
+    });
     lineSeriesRef.current = lineSeries;
 
-   
     const handleResize = () => {
       if (chartRef.current && chartContainerRef.current) {
         chartRef.current.applyOptions({
@@ -53,21 +78,17 @@ const IntradayChart = ({ data, height, width }) => {
       }
     };
 
-    
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(chartContainerRef.current);
-
-    
     window.addEventListener('resize', handleResize);
 
     return () => {
-      resizeObserver.disconnect(); 
-      window.removeEventListener('resize', handleResize); 
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', handleResize);
       chart.remove();
     };
-  }, [height]); 
+  }, [height, width]);
 
-  
   useEffect(() => {
     if (lineSeriesRef.current && data && data.length > 0) {
       lineSeriesRef.current.setData(data);
@@ -76,33 +97,19 @@ const IntradayChart = ({ data, height, width }) => {
       }
 
       const firstValue = data[0].value;
-      
       const lastValue = data[data.length - 1].value;
-      
-      const calculatedPercentChange = ((lastValue - firstValue) / firstValue) * 100;
-      
-      const isPositive = calculatedPercentChange >= 0;
-      setPercentChange(calculatedPercentChange.toFixed(2));
-      setPositive(isPositive);
+      const isPositive = lastValue >= firstValue;
+      const color = isPositive ? COLORS.positive : COLORS.negative;
 
-      if (!isPositive) {
-        lineSeriesRef.current.applyOptions({
-          lineColor: '#FF4B4B',
-          topColor: 'rgba(255, 75, 75, 0.4)',
-          bottomColor: 'rgba(255, 75, 75, 0.0)',
-        });
-      }
-      else {
-        lineSeriesRef.current.applyOptions({
-          lineColor: '#33D778',
-          topColor: 'rgba(46, 220, 135, 0.4)',
-          bottomColor: 'rgba(40, 221, 100, 0.0)',
-        });
-      }
+      lineSeriesRef.current.applyOptions({
+        lineColor: color,
+        topColor: isPositive ? "rgba(8, 153, 129, 0.28)" : "rgba(242, 54, 69, 0.28)",
+        bottomColor: isPositive ? "rgba(8, 153, 129, 0.0)" : "rgba(242, 54, 69, 0.0)",
+        priceLineColor: color,
+      });
     }
   }, [data]);
 
- 
   return <div ref={chartContainerRef} style={{ width: '100%' }} />;
 };
 

@@ -2,26 +2,33 @@ import { useUser } from "../../Contexts/UserContext";
 import { useEffect, useState } from "react";
 import popularStocks from "../../s&p500stocks.json"
 import StockChartCard from "../../Components/StockChartCard/StockChartCard";
+import MiniStockCard from "../../Components/MiniStockCard/MiniStockCard";
 import "../Watchlist/watchlist.css"
-import LoadingSpinner from "../../Components/LoadingPage/LoadingPage";
 import AIChat from "../../Components/AIChat/AIChat";
 import { fetchAuthSession } from "@aws-amplify/core";
+
+
+const nameBySymbol = popularStocks.reduce((map, stock) => {
+    map[stock.Symbol] = stock.Security;
+    return map;
+}, {});
+const nameForSymbol = (symbol) => nameBySymbol[symbol] ?? symbol;
 
 const Watchlist = () => {
     const {state, dispatch} = useUser();
 
     const [addToWatchlist, setAddToWatchlist] = useState(false);
-    const [removeWathclistDisplay, setRemoveWathlistDisplay] = useState(false);
+    const [removeWatchlistDisplay, setRemoveWatchlistDisplay] = useState(false);
 
     const [stocksToAdd, setStocksToAdd] = useState([]);
     const [filterValue, setFilterValue] = useState("");
     const [filteredStocks, setFilteredStocks] = useState([]);
 
-    const [chartData, setChartData] = useState([]);
+
+    const [chartDataMap, setChartDataMap] = useState({});
+    const [heroSymbol, setHeroSymbol] = useState(null);
 
     const [isLoading, setIsLoading] = useState(true);
-
-    const [watchlistData, setWatchlistData] = useState([]);
 
     useEffect(() => {
         const newFilteredStocks = popularStocks.filter(stock => stock.Security.toLowerCase().includes(filterValue.toLowerCase()));
@@ -30,11 +37,26 @@ const Watchlist = () => {
 
     useEffect(() => {
         getData(state.watchlist)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+
+    useEffect(() => {
+        if (state.watchlist.length === 0) {
+            if (heroSymbol !== null) setHeroSymbol(null);
+            return;
+        }
+        if (!heroSymbol || !state.watchlist.includes(heroSymbol)) {
+            setHeroSymbol(state.watchlist[0]);
+        }
+    }, [state.watchlist, heroSymbol]);
+
     const getData = async (stocks) => {
-        //console.log("stocks", stocks)
-        //console.log(state.watchlist)
+        if (!stocks || stocks.length === 0) {
+            setIsLoading(false);
+            return;
+        }
+
         try {
             setIsLoading(true);
             const response = await fetch(
@@ -49,22 +71,21 @@ const Watchlist = () => {
             );
 
             if (!response.ok) {
-                
-                 
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const result = await response.json();
-            //console.log(result);
-            const allChartData = stocks.map((sym, i) => {
-                dispatch({type : "ADD_TO_WATCHLIST", payload : sym})
-                const data = result[i] || [];
-                return data.map(({ timestamp, close }) => ({
+
+            const newEntries = {};
+            stocks.forEach((symbol, i) => {
+                const rows = result[i] || [];
+                newEntries[symbol] = rows.map(({ timestamp, close }) => ({
                     time: Math.floor(new Date(timestamp).getTime() / 1000),
                     value: close,
                 }));
             });
-            //console.log([...chartData, ...allChartData])
-            setChartData([...chartData, ...allChartData]);
+
+            setChartDataMap((prev) => ({ ...prev, ...newEntries }));
 
         } catch (error) {
             console.error(error);
@@ -73,23 +94,21 @@ const Watchlist = () => {
         }
     }
 
-    const handleClickStock = (stock) => {
-        const newList = stocksToAdd;
-        setStocksToAdd([...newList, stock.Symbol]);
-    }
-    const handleClickStockAdd = async (stock) => {
-        const newList = stocksToAdd;
-        setStocksToAdd([...newList, stock]);
-        intradayPut(stock);
-        
-        
-    }
     const intradayPut = async (stock) => {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/intraday/request?symbol=${encodeURIComponent(stock)}`,
-        { 
-            method: "POST",
+        await fetch(`${process.env.REACT_APP_API_URL}/intraday/request?symbol=${encodeURIComponent(stock)}`,
+        { method: "POST" })
+    }
 
-        })
+    const handleClickStock = (stock) => {
+        if (stocksToAdd.includes(stock.Symbol)) return;
+        setStocksToAdd([...stocksToAdd, stock.Symbol]);
+        intradayPut(stock.Symbol);
+    }
+
+    const handleClickStockAdd = async (stock) => {
+        if (!stock || stocksToAdd.includes(stock)) return;
+        setStocksToAdd([...stocksToAdd, stock]);
+        intradayPut(stock);
     }
 
     const updateDynamo = async (stocks) => {
@@ -130,14 +149,16 @@ const Watchlist = () => {
         }
     }
 
-    const handleStocksAdd =  (e) => {
+    const handleStocksAdd = (e) => {
         e.preventDefault();
+        stocksToAdd.forEach((symbol) => {
+            dispatch({ type: "ADD_TO_WATCHLIST", payload: symbol });
+        });
         getData(stocksToAdd);
         updateDynamo(stocksToAdd);
+        setStocksToAdd([]);
         setAddToWatchlist(false);
-
     }
-    
 
     const handleRemoveStock = (remove) => {
         const newList = stocksToAdd.filter(stock => stock !== remove);
@@ -146,11 +167,10 @@ const Watchlist = () => {
 
     const deleteFromWatchlist = async (symbol) => {
         dispatch({type : "REMOVE_FROM_WATCHLIST", payload : symbol})
-        //console.log("dispatch ran")
 
         const session = await fetchAuthSession();
         const token = session.tokens?.idToken?.toString();
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/user/watchlist`, {
+        await fetch(`${process.env.REACT_APP_API_URL}/user/watchlist`, {
             method: 'DELETE',
             headers: {
             "Authorization": `Bearer ${token}`,
@@ -162,47 +182,85 @@ const Watchlist = () => {
             symbol: symbol
             })
         });
-        //console.log(response.json())
-        window.location.reload();
-        
-        
+        // No reload — state.watchlist already updated via dispatch above,
+        // and hero/secondary derive directly from it.
     }
 
-    if (isLoading) {
-        return <LoadingSpinner message="Loading watchlisted stocks..." />
-    }
+    const secondarySymbols = state.watchlist.filter((symbol) => symbol !== heroSymbol);
+    const heroChartData = heroSymbol ? chartDataMap[heroSymbol] : null;
 
     return (
-        <div>
-        <div className="watchlist-container">
-            {state.watchlist.length === 0 && (
-                <h1>You have no saved stocks</h1>
-            )}
-            <div className="watchlist-buttons">
-                <button className="add-to-watchlist-button" onClick={() => setAddToWatchlist(true)}>Add Stocks to Watchlist</button>
-                <button className="add-to-watchlist-button" onClick={() => {setRemoveWathlistDisplay(!removeWathclistDisplay)}}>Remove From Watchlist</button>
-
+        <div className="watchlist-page">
+            <div className="watchlist-toolbar">
+                <button className="watchlist-btn-primary" onClick={() => setAddToWatchlist(true)}>
+                    + Add Stocks to Watchlist
+                </button>
+                <button className="watchlist-btn-secondary" onClick={() => setRemoveWatchlistDisplay(!removeWatchlistDisplay)}>
+                    Remove from Watchlist
+                </button>
             </div>
-            {removeWathclistDisplay && 
+
+            {removeWatchlistDisplay &&
             <div className="delete-watchlist-list">
                 {state.watchlist.map((stock) => (
-                    <button className="delete-watchlist-button" onClick={() => deleteFromWatchlist(stock)}>Delete {stock}</button>
+                    <button key={stock} className="delete-watchlist-button" onClick={() => deleteFromWatchlist(stock)}>
+                        Delete {stock}
+                    </button>
                 ))}
             </div>
             }
-            <div className="indices-list">
-                {chartData.map((data, i) => (
-                    <StockChartCard 
-                        key={state.watchlist[i]} 
-                        symbol={state.watchlist[i]} 
-                        title={state.watchlist[i]} 
-                        chartData={data}
-                    />
-                ))}
-            </div>
-            
-         
-            
+
+            {isLoading ? (
+                <>
+                    <div className="watchlist-skeleton-hero">
+                        <div className="skeleton-line" style={{ width: "30%" }} />
+                        <div className="skeleton-block" style={{ height: 300 }} />
+                    </div>
+                    <div className="watchlist-secondary">
+                        {[...Array(5)].map((_, i) => (
+                            <div key={i} className="watchlist-skeleton-card">
+                                <div className="skeleton-line" style={{ width: "55%" }} />
+                                <div className="skeleton-line" style={{ width: "30%", marginTop: 6 }} />
+                                <div className="skeleton-block" style={{ height: 28, marginTop: 10 }} />
+                            </div>
+                        ))}
+                    </div>
+                </>
+            ) : state.watchlist.length === 0 ? (
+                <div className="watchlist-empty">
+                    <p>You have no saved stocks yet.</p>
+                    <button className="watchlist-btn-primary" onClick={() => setAddToWatchlist(true)}>
+                        Add your first stock
+                    </button>
+                </div>
+            ) : (
+                <>
+                    {heroSymbol && heroChartData && (
+                        <div className="watchlist-hero">
+                            <StockChartCard
+                                symbol={heroSymbol}
+                                title={nameForSymbol(heroSymbol)}
+                                chartData={heroChartData}
+                                variant="hero"
+                            />
+                        </div>
+                    )}
+                    {secondarySymbols.length > 0 && (
+                        <div className="watchlist-secondary">
+                            {secondarySymbols.map((symbol) => (
+                                <MiniStockCard
+                                    key={symbol}
+                                    symbol={symbol}
+                                    name={nameForSymbol(symbol)}
+                                    chartData={chartDataMap[symbol] ?? []}
+                                    onClick={() => setHeroSymbol(symbol)}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </>
+            )}
+
             {addToWatchlist && (
                 <div className="form-backdrop" onClick={(e) => {
                     if (e.target.className === 'form-backdrop') {
@@ -228,7 +286,7 @@ const Watchlist = () => {
                         </div>
                         <input 
                             className="search-add-stocks" 
-                            placeholder="Search Popular stocks or enter symbol and click add" 
+                            placeholder="Search popular stocks or enter symbol and click add" 
                             onChange={(e) => setFilterValue(e.target.value)}
                         />
                         <button className="add-button" type="button" onClick={() => handleClickStockAdd(filterValue.toUpperCase())}>Add</button>
@@ -247,12 +305,9 @@ const Watchlist = () => {
                     </form>
                 </div>
              )}
-             
+
+            <AIChat pageContext="(The User is currently on the watchlist page)"/>
         </div>
-            <div className="ai-chat-div">
-                <AIChat pageContext="(The User is currently on the watchlist page)"/>
-            </div>
-        </div>
-            )
+    )
 }
 export default Watchlist;

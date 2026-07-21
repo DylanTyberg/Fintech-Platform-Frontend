@@ -4,6 +4,12 @@ import { useUser } from '../../Contexts/UserContext';
 import ReactMarkdown from 'react-markdown';
 import './AIChat.css';
 
+const SUGGESTED_PROMPTS = [
+  "Why did my biggest holding move today?",
+  "Summarize my portfolio risk",
+  "What's my best performer this week?",
+];
+
 const AIChat = ({ pageContext = "" }) => {
   const { askAI, clearConversation, isAILoading } = useAI();
   
@@ -15,6 +21,8 @@ const AIChat = ({ pageContext = "" }) => {
   const { state } = useUser();
 
   useEffect(() => {
+    if (messages.length === 0) return; 
+    
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isAILoading]);
 
@@ -52,19 +60,36 @@ const AIChat = ({ pageContext = "" }) => {
     <div className="ai-chat-container">
       <div className="ai-chat-history">
         {messages.length === 0 ? (
-          <p className="ai-chat-empty">
-            Ask me anything about your portfolio or the market...
-          </p>
+          <div className="ai-chat-empty">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.4"/>
+              <path d="M8 12H16M12 8V16" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+            </svg>
+            <h4>Ask about your portfolio</h4>
+            <p>Answers reference your live holdings and market data — not general knowledge.</p>
+            <div className="ai-chat-chips">
+              {SUGGESTED_PROMPTS.map((prompt) => (
+                <button
+                  key={prompt}
+                  type="button"
+                  className="ai-chat-chip"
+                  onClick={() => setInput(prompt)}
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          </div>
         ) : (
           messages.map((message, i) => (
             <div key={i} className="ai-chat-exchange">
               {message.role === 'user' ? (
                 <div className="ai-chat-user-message">
-                  <strong></strong> {message.content}
+                  {message.content}
                 </div>
               ) : (
                 <div className="ai-chat-ai-message">
-                  <strong className="ai-chat-ai-label">AI:</strong>
+                  <strong className="ai-chat-ai-label">AI</strong>
                   <ReactMarkdown>{message.content}</ReactMarkdown>
                 </div>
               )}
@@ -74,7 +99,7 @@ const AIChat = ({ pageContext = "" }) => {
 
         {isAILoading && (
           <div className="ai-chat-loading">
-            <strong className="ai-chat-ai-label">AI:</strong> Thinking...
+            <strong className="ai-chat-ai-label">AI</strong> Thinking...
           </div>
         )}
 

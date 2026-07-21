@@ -4,54 +4,53 @@ import NavigationBar from './Navigation-bar/navigation-bar';
 import Sidebar from './Market/Sidebar/sidebar';
 import Indices from './Market/indices/indices';
 import SignIn from './Authentication/sign-in/sign-in';
-import AllStocks from './Market/All-Stocks/all-stocks';
+import SearchStocks from './Market/All-Stocks/all-stocks';
 import StockDetails from './Stock-details/stock-details';
 import Movers from './Market/movers/movers';
 import Sectors from './Market/Sectors/sectors';
 import News from './Market/News/news';
 import SignUp from './Authentication/SignUp/SignUp';
 import ConfirmEmail from './Authentication/SignUp/confirmEmail';
-import PortfolioSidebar from './Portfolio/PortfolioSidebar/PortfolioSidebar';
 import Watchlist from './Portfolio/Watchlist/watchlist';
 import Overview from './Market/Overview/overview';
 import TradeSimulator from './Portfolio/TradeSimulator/TradeSimulator';
-import BuyStock from './Portfolio/TradeSimulator/BuyStock/BuyStock';
-import SellStock from './Portfolio/TradeSimulator/SellStock/SellStock';
 import PortfolioAnalytics from './Portfolio/PortfolioAnalytics/PortfolioAnalytics';
 
 import ProtectedRoute from './Components/ProtectedRoute';
 import { useUser } from './Contexts/UserContext';
+import ScrollToTop from './Components/ScrollToTop';
 
 function App() {
   const {state} = useUser();
 
   return (
-    <Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
       <Route path="sign-in" element={<SignIn/>}/>
       <Route path='confirm-email' element={<ConfirmEmail/>}/>
       <Route path="sign-up" element={<SignUp/>}/>
       <Route path="/" element={<NavigationBar />}>
         <Route path="/" element={<Sidebar />}>
           <Route index element={<Overview/>}/>
-          <Route path="/all-stocks" element={<AllStocks/>}/>
+          <Route path="/search-stocks" element={<SearchStocks/>}/>
           <Route path="/movers" element={<Movers/>}/>
           <Route path="/sectors" element={<Sectors/>}/>
           <Route path="/indices" element={<Indices/>}/>
+          <Route path="/stock-details/:symbol" element={<StockDetails/>}/>
         </Route>
           <Route path="/portfolio" element={
             <ProtectedRoute>
-              <PortfolioSidebar />
+              <Sidebar />
             </ProtectedRoute>
           }>
           <Route index element={<Watchlist/>}/>
           <Route path="trade-simulator" element={<TradeSimulator/>}/>
           <Route path="portfolio-analytics" element={<PortfolioAnalytics/>}/>
         </Route>
-        <Route path="stock-details/:symbol" element={<StockDetails />}/>
-        <Route path="portfolio/trade-simulator/buy" element={<BuyStock/>}/>
-        <Route path="portfolio/trade-simulator/sell" element={<SellStock/>}/>
       </Route>
     </Routes>
+    </>
   );
 }
 

@@ -1,16 +1,14 @@
 import { useUser } from "../../../Contexts/UserContext";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "../BuyStock/BuyStock.css"
 import { TradeLoadingState } from "../../../Components/LoadingPage/LoadingPage";
-import BackButton from "../../../Components/BackButton/BackButton";
 import { fetchAuthSession } from "@aws-amplify/core";
 
-const SellStock = () => {
-    const {state, dispatch} = useUser();
-    const navigate = useNavigate();
 
-    const [symbol, setSymbol] = useState("");
+const SellStock = ({ initialSymbol = "", onClose }) => {
+    const {state, dispatch} = useUser();
+
+    const [symbol, setSymbol] = useState(initialSymbol);
     const [shares, setShares] = useState("");
     
     const [orderType, setOrderType] = useState("market");
@@ -21,27 +19,41 @@ const SellStock = () => {
     const [isFocused, setIsFocused] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleStockSearch = async () => {
+    const handleStockSearch = async (targetSymbol) => {
+        const target = (targetSymbol ?? symbol).trim().toUpperCase();
+        if (!target) return;
         try {
             setIsLoading(true)
             const response = await fetch(
-                `${process.env.REACT_APP_API_URL}/intraday/latest?symbol=${symbol}`,
+                `${process.env.REACT_APP_API_URL}/intraday/latest?symbol=${target}`,
                 {
                 method: "GET",
-
                 }
             )
 
             const result = await response.json();
-            //console.log(result);
             setSelectedStock(result);
         } catch (error) {
             //console.log(error)
         } finally{
             setIsLoading(false);
         }
-       
     };
+
+    useEffect(() => {
+        if (initialSymbol) {
+            setSymbol(initialSymbol);
+            handleStockSearch(initialSymbol);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initialSymbol]);
+
+    // Computed once here instead of inline three separate times (disabled
+    // check, warning message, summary row) — those three call sites used to
+    // each re-derive this slightly differently, including one that crashed.
+    const heldQuantity = selectedStock
+        ? state.holdings.find(item => item.symbol === selectedStock.symbol)?.quantity ?? 0
+        : 0;
 
     const handleSell = async () => {
         if (!selectedStock || !shares) {
@@ -49,10 +61,9 @@ const SellStock = () => {
             return;
         }
 
-        const totalCost = shares * selectedStock.price;
-        
-        if (totalCost > state.cash) {
-            setError("Insufficient funds");
+
+        if (parseFloat(shares) > heldQuantity) {
+            setError("Insufficient shares");
             return;
         }
 
@@ -141,25 +152,28 @@ const SellStock = () => {
             payload: state.cash + (selectedStock.close * shares)
         })
 
-
-
-        navigate("/portfolio/trade-simulator");
+        onClose();
     };
 
     return (
-        <div>
-        <BackButton/>
-        <div className="buy-page">
-            <div className="buy-container">
+        <div
+            className="trade-modal-backdrop"
+            onClick={(e) => {
+                if (e.target.className === 'trade-modal-backdrop') {
+                    onClose();
+                }
+            }}
+        >
+            <div className="buy-container" onClick={(e) => e.stopPropagation()}>
                 <div className="buy-header">
                     <h1>Sell Stock</h1>
-                    <button className="close-button" onClick={() => navigate("/portfolio/trade-simulator")}>
+                    <button className="close-button" onClick={onClose}>
                         ✕
                     </button>
                 </div>
 
                 <div className="stock-search-section">
-                    <label>{!isFocused ? "Search Stock" : "Click Outside Text Box to fetch price"}</label>
+                    <label>{!isFocused ? "Search Stock" : "Click away to fetch price"}</label>
                     <input
                         type="text"
                         className="stock-search-input"
@@ -167,9 +181,9 @@ const SellStock = () => {
                         value={symbol}
                         onChange={(e) => setSymbol(e.target.value.toUpperCase())}
                         onFocus={() => setIsFocused(true)}  
-                        onBlur={(e) => {
+                        onBlur={() => {
                             setIsFocused(false);  
-                            handleStockSearch(e); 
+                            handleStockSearch(); 
                         }}
                     />
                 </div>
@@ -190,10 +204,14 @@ const SellStock = () => {
                         <label>Order Type</label>
                         <div className="order-type-buttons">
                             <button
+                                type="button"
                                 className={orderType === 'market' ? 'active' : ''}
                                 onClick={() => setOrderType('market')}
                             >
                                 Market
+                            </button>
+                            <button type="button" className="coming-soon" disabled title="Limit orders coming soon">
+                                Limit <span className="order-type-soon-badge">Soon</span>
                             </button>
                         </div>
                     </div>
@@ -205,10 +223,7 @@ const SellStock = () => {
                         </div>
                         <div className="summary-row">
                             <span>Available Shares:</span>
-                            <span>{selectedStock 
-                                ? state.holdings.find(item => item.symbol === selectedStock.symbol)?.quantity || 0
-                                : 0
-                            }</span>
+                            <span>{heldQuantity}</span>
                         </div>
                         <div className="summary-row">
                             <span>Price per share:</span>
@@ -221,34 +236,33 @@ const SellStock = () => {
                         <div className="summary-row">
                             <span>Cash After Trade:</span>
                             <span className="positive">
-                                ${(state.cash + ((shares || 0) * (selectedStock?.close || 0))).toFixed(2) || '0.00'}
+                                ${(state.cash + ((shares || 0) * (selectedStock?.close || 0))).toFixed(2)}
                             </span>
                         </div>
                     </div>
 
                     {error && <div className="error-message">{error}</div>}
-                    {state.cash < (shares * selectedStock?.price) && (
-                        <div className="warning-message">Insufficient funds</div>
+                    {selectedStock && parseFloat(shares || 0) > heldQuantity && (
+                        <div className="warning-message">Insufficient shares</div>
                     )}
 
                     <div className="form-actions">
                         <button
                             className="cancel-button"
-                            onClick={() => navigate("/portfolio/trade-simulator")}
+                            onClick={onClose}
                         >
                             Cancel
                         </button>
                         <button
                             className="buy-button"
                             onClick={handleSell}
-                            disabled={!selectedStock || !shares ||  state.holdings.find(item => item.symbol == selectedStock.symbol).quantity < shares}
+                            disabled={!selectedStock || !shares || parseFloat(shares) > heldQuantity}
                         >
                             Sell {shares || 0} Shares
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     )
 }

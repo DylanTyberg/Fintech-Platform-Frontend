@@ -1,47 +1,51 @@
 import { useUser } from "../../../Contexts/UserContext";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "../BuyStock/BuyStock.css"
 import { TradeLoadingState } from "../../../Components/LoadingPage/LoadingPage";
-import BackButton from "../../../Components/BackButton/BackButton";
 import { fetchAuthSession } from "@aws-amplify/core";
 
-const BuyStock = () => {
-    const {state, dispatch} = useUser();
-    const navigate = useNavigate();
 
-    const [symbol, setSymbol] = useState("");
+const BuyStock = ({ initialSymbol = "", onClose }) => {
+    const {state, dispatch} = useUser();
+
+    const [symbol, setSymbol] = useState(initialSymbol);
     const [shares, setShares] = useState("");
-   
     const [orderType, setOrderType] = useState("market");
-    const [limitPrice, setLimitPrice] = useState("");
     const [selectedStock, setSelectedStock] = useState(null);
     const [error, setError] = useState("");
 
     const [isFocused, setIsFocused] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleStockSearch = async () => {
+    const handleStockSearch = async (targetSymbol) => {
+        const target = (targetSymbol ?? symbol).trim().toUpperCase();
+        if (!target) return;
         try {
             setIsLoading(true);
             const response = await fetch(
-                `${process.env.REACT_APP_API_URL}/intraday/latest?symbol=${symbol}`,
+                `${process.env.REACT_APP_API_URL}/intraday/latest?symbol=${target}`,
                 {
                 method: "GET",
-
                 }
             )
 
             const result = await response.json();
-            //console.log(result);
             setSelectedStock(result);
         } catch (error) {
             //console.log(error)
         } finally {
             setIsLoading(false);
         }
-       
     };
+
+    // Pre-fill + fetch immediately when opened from a holdings row.
+    useEffect(() => {
+        if (initialSymbol) {
+            setSymbol(initialSymbol);
+            handleStockSearch(initialSymbol);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initialSymbol]);
 
     const handleBuy = async () => {
         if (!selectedStock || !shares) {
@@ -49,8 +53,9 @@ const BuyStock = () => {
             return;
         }
 
-        const totalCost = shares * selectedStock.price;
-        
+
+        const totalCost = shares * selectedStock.close;
+
         if (totalCost > state.cash) {
             setError("Insufficient funds");
             return;
@@ -142,24 +147,28 @@ const BuyStock = () => {
             payload: state.cash - (selectedStock.close * shares)
         })
 
-        navigate("/portfolio/trade-simulator");
+        onClose();
     };
 
     return (
-        <div>
-        <BackButton/>
-        <div className="buy-page">
-            
-            <div className="buy-container">
+        <div
+            className="trade-modal-backdrop"
+            onClick={(e) => {
+                if (e.target.className === 'trade-modal-backdrop') {
+                    onClose();
+                }
+            }}
+        >
+            <div className="buy-container" onClick={(e) => e.stopPropagation()}>
                 <div className="buy-header">
                     <h1>Buy Stock</h1>
-                    <button className="close-button" onClick={() => navigate("/portfolio/trade-simulator")}>
+                    <button className="close-button" onClick={onClose}>
                         ✕
                     </button>
                 </div>
 
                 <div className="stock-search-section">
-                    <label>{!isFocused ? "Search Stock" : "Click Outside Text Box to fetch price"}</label>
+                    <label>{!isFocused ? "Search Stock" : "Click away to fetch price"}</label>
                     <input
                         type="text"
                         className="stock-search-input"
@@ -167,9 +176,9 @@ const BuyStock = () => {
                         value={symbol}
                         onChange={(e) => setSymbol(e.target.value.toUpperCase())}
                         onFocus={() => setIsFocused(true)}  
-                        onBlur={(e) => {
+                        onBlur={() => {
                             setIsFocused(false);  
-                            handleStockSearch(e); 
+                            handleStockSearch(); 
                         }}
                     />
                 </div>
@@ -190,10 +199,14 @@ const BuyStock = () => {
                         <label>Order Type</label>
                         <div className="order-type-buttons">
                             <button
+                                type="button"
                                 className={orderType === 'market' ? 'active' : ''}
                                 onClick={() => setOrderType('market')}
                             >
                                 Market
+                            </button>
+                            <button type="button" className="coming-soon" disabled title="Limit orders coming soon">
+                                Limit <span className="order-type-soon-badge">Soon</span>
                             </button>
                         </div>
                     </div>
@@ -227,7 +240,7 @@ const BuyStock = () => {
                     <div className="form-actions">
                         <button
                             className="cancel-button"
-                            onClick={() => navigate("/portfolio/trade-simulator")}
+                            onClick={onClose}
                         >
                             Cancel
                         </button>
@@ -241,7 +254,6 @@ const BuyStock = () => {
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     )
 }

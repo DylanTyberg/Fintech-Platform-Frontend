@@ -18,7 +18,19 @@ const NavigationBar = () => {
     return (
         <Fragment >
             <div className="nav-bar">
-                <div className="nav-spacer"></div>
+                {/* TODO: swap "YOURBRAND" / "MARKETS TERMINAL" for your real product name */}
+                <Link className="nav-brand" to="/">
+                    <span className="nav-brand-mark">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M2 14L7 9L10.5 12L18 4" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M13 4H18V9" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                    </span>
+                    <span className="nav-brand-text">
+                        
+                        <small></small>
+                    </span>
+                </Link>
                 <div className="links">
                     <Link className={!location.pathname.startsWith("/portfolio") ? "navbar-link-active" : "navbar-link"} to="/">
                         Market

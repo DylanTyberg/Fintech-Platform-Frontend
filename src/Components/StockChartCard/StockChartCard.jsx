@@ -3,36 +3,49 @@ import { useNavigate } from "react-router-dom";
 import IntradayChart from "../intraday-chart/indraday-chart";
 import StockChange from "../stock-change/stock-change";
 
-const StockChartCard = ({className = "chart-card", symbol, title, delay = 0, chartData}) => {
-    const [change, setChange] = useState(0)
-    const [date, setDate] = useState([])
+const formatPrice = (value) =>
+    value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+// variant="hero" for the one featured chart, "secondary" (default) for
+// the smaller ones below it.
+const StockChartCard = ({ symbol, title, chartData, variant = "secondary" }) => {
+    const [change, setChange] = useState(0);
     const navigate = useNavigate();
 
+    const isHero = variant === "hero";
+    const chartHeight = isHero ? 340 : 200;
+    const price = chartData.length ? chartData[chartData.length - 1].value : null;
 
     useEffect(() => {
-
-        console.log("chartdata", chartData[0]);
         if (chartData[0]) {
-            setChange(((chartData[chartData.length - 1].value - chartData[0].value) / chartData[chartData.length - 1].value) * 100);
-            setDate(new Date(chartData[0].timestamp));
+            const firstValue = chartData[0].value;
+            const lastValue = chartData[chartData.length - 1].value;
+            setChange(((lastValue - firstValue) / firstValue) * 100);
         }
     }, [chartData]);
 
     return (
-            <div className="indices-stock-chart" onClick={() => {navigate(`/stock-details/${symbol}`)}}>
-                <div className="title-date">
-                    <h1 className="chart-title">{title}</h1>
-                    <StockChange 
-                    className="index-page-change"
-                    percentChange={change}
-                    />
+        <div
+            className={`indices-stock-chart${isHero ? " indices-stock-chart--hero" : ""}`}
+            onClick={() => navigate(`/stock-details/${symbol}`)}
+        >
+            <div className="chart-card-head">
+                <div>
+                    <h1 className={`chart-title${isHero ? " chart-title--hero" : ""}`}>{title}</h1>
+                    <span className="chart-symbol mono">{symbol}</span>
                 </div>
-                <div className="chart">
-                    <IntradayChart  data={chartData} />
-                </div>
+                <StockChange percentChange={change} />
             </div>
-    )
+            {price != null && (
+                <div className={`num chart-price${isHero ? " chart-price--hero" : ""}`}>
+                    ${formatPrice(price)}
+                </div>
+            )}
+            <div className="chart" style={{ height: chartHeight }}>
+                <IntradayChart data={chartData} height={chartHeight} />
+            </div>
+        </div>
+    );
+};
 
-}
 export default StockChartCard;

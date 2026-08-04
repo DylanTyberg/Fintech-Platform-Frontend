@@ -85,7 +85,35 @@ const userReducer = (state, action) => {
                 ...state,
                 watchlist: state.watchlist.filter(item => item !== action.payload)
             };
-        
+        case "TRADE_EXECUTED": {
+            const { trade, position, cash } = action.payload;
+
+            // Server is authoritative. The fill price can differ from the quote
+            // the user saw, so never recompute cash locally -- just take it.
+            const holdings = position.quantity === 0
+                // Fully closed: server deleted the item, mirror that here.
+                ? state.holdings.filter(h => h.symbol !== position.symbol)
+                : state.holdings.some(h => h.symbol === position.symbol)
+                    ? state.holdings.map(h =>
+                        h.symbol === position.symbol
+                            ? { ...h, quantity: position.quantity, avgCost: position.avgCost }
+                            : h
+                    )
+                    : [...state.holdings, {
+                        symbol:   position.symbol,
+                        quantity: position.quantity,
+                        avgCost:  position.avgCost,
+                    }];
+
+            return {
+                ...state,
+                cash,
+                holdings,
+                // Optional: keep recent fills for a confirmation toast or
+                // activity feed without another fetch.
+                recentTrades: [trade, ...(state.recentTrades ?? [])].slice(0, 50),
+            };
+        }
         case "LOGOUT":
             return { ...logoutState};
         default:

@@ -17,6 +17,8 @@ const BuyStock = ({ initialSymbol = "", onClose }) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
+    const [submitting, setSubmitting] = useState(false);
+
     const handleStockSearch = async (targetSymbol) => {
         const target = (targetSymbol ?? symbol).trim().toUpperCase();
         if (!target) return;
@@ -47,107 +49,83 @@ const BuyStock = ({ initialSymbol = "", onClose }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initialSymbol]);
 
-    const handleBuy = async () => {
+    const handleBuy = async (side="BUY") => {
         if (!selectedStock || !shares) {
             setError("Please select a stock and enter number of shares");
             return;
         }
 
-
-        const totalCost = shares * selectedStock.close;
-
-        if (totalCost > state.cash) {
-            setError("Insufficient funds");
+        const qty = parseFloat(shares);
+        if (!Number.isFinite(qty) || qty <= 0) {
+            setError("Enter a valid quantity");
             return;
         }
 
-        
-        const existingHolding = state.holdings.find(holding => holding.symbol === selectedStock.symbol);
-
-        const params = {
-            user: state.user.userId,
-            type: "holding",
-            details: selectedStock.symbol,
-            quantity: (existingHolding?.quantity || 0) + parseFloat(shares),
+        // Client-side check for fast feedback only. The server re-validates
+        // against its own price and balance -- this is a UX nicety, not a
+        // control, since the fill price will differ from what's displayed.
+        if (side === "BUY" && qty * selectedStock.close > state.cash) {
+            setError("Insufficient funds");
+            return;
         }
-        
-
-        try {
-
-            const session = await fetchAuthSession();
-            const token = session.tokens?.idToken?.toString();
-            const response = await fetch(
-                `${process.env.REACT_APP_API_URL}/user`,
-                {
-                method: "PUT",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(params), 
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+        if (side === "SELL") {
+            const held = state.holdings.find(h => h.symbol === selectedStock.symbol);
+            if (!held || held.quantity < qty) {
+                setError("Insufficient shares");
+                return;
             }
-            const result = await response.json();
-            //console.log(result);
-
-        } catch (error)
-        {
-            //console.log(error);
         }
 
-        const cash_params = {
-            user: state.user.userId,
-            type: "cash",
-            details: "",
-            amount: state.cash - (selectedStock.close * shares),
-            
-        }
-        
+        setSubmitting(true);
+        setError(null);
 
         try {
             const session = await fetchAuthSession();
             const token = session.tokens?.idToken?.toString();
-            const response = await fetch(
-                `${process.env.REACT_APP_API_URL}/user`,
-                {
-                method: "PUT",
+
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/user/trades`, {
+                method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(cash_params), 
-                }
-            );
+                body: JSON.stringify({
+                    symbol: selectedStock.symbol,
+                    side,
+                    quantity: qty,
+                    // Lets a retried request return the original result
+                    // instead of executing the trade twice.
+                    idempotencyKey: crypto.randomUUID(),
+                }),
+            });
+
+            const result = await response.json();
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                // Surface the server's reason -- insufficient funds, no price
+                // available, concurrent update -- instead of failing silently.
+                setError(result?.message ?? `Trade failed (${response.status})`);
+                return;
             }
-            const result = await response.json();
-            //console.log(result);
 
-        } catch (error)
-        {
-            //console.log(error);
+            // Use the server's authoritative values, not locally computed ones.
+            // The fill price can differ from the quote the user saw.
+            dispatch({
+                type: "TRADE_EXECUTED",
+                payload: {
+                    trade: result.trade,
+                    position: result.position,
+                    cash: result.cash,
+                },
+            });
+
+            onClose();
+
+        } catch (error) {
+            setError("Network error, please try again");
+        } finally {
+            setSubmitting(false);
         }
-
-
-        dispatch({
-            type: "ADD_TO_HOLDINGS",
-            payload: {
-                symbol: selectedStock.symbol,
-                quantity: parseFloat(shares),
-            }
-        });
-        dispatch({
-            type: "SET_CASH",
-            payload: state.cash - (selectedStock.close * shares)
-        })
-
-        onClose();
     };
 
     return (
@@ -246,10 +224,10 @@ const BuyStock = ({ initialSymbol = "", onClose }) => {
                         </button>
                         <button
                             className="buy-button"
-                            onClick={handleBuy}
+                            onClick={() => handleBuy("BUY")}
                             disabled={!selectedStock || !shares || state.cash < (shares * selectedStock?.close)}
                         >
-                            Buy {shares || 0} Shares
+                            {submitting ? "Executing…" : `Buy ${shares || 0} Shares`}
                         </button>
                     </div>
                 </div>

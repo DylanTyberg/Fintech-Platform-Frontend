@@ -30,6 +30,7 @@
     color: var(--text-dim);
 }
 
+.analytics-mode-toggle,
 .analytics-timeframe-toggle {
     display: flex;
     gap: 2px;
@@ -38,6 +39,7 @@
     border-radius: 6px;
 }
 
+.analytics-mode-toggle button,
 .analytics-timeframe-toggle button {
     border: none;
     background: transparent;
@@ -51,13 +53,38 @@
     transition: background-color 0.15s ease, color 0.15s ease;
 }
 
+.analytics-timeframe-toggle button {
+    padding: 5px 12px;
+    font-size: 11px;
+}
+
+.analytics-mode-toggle button:hover,
 .analytics-timeframe-toggle button:hover {
     color: var(--text);
 }
 
+.analytics-mode-toggle button.active,
 .analytics-timeframe-toggle button.active {
     background-color: var(--accent);
     color: #ffffff;
+}
+
+/* ── Meta row / excluded note ────────────────────────────────────────────── */
+.analytics-meta-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-faint);
+}
+
+.analytics-excluded-note {
+    font-size: 12px;
+    color: var(--text-faint);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
 }
 
 /* ── Performance panel ───────────────────────────────────────────────────── */
@@ -68,8 +95,17 @@
     padding: 20px 22px;
 }
 
+.analytics-performance-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
 .analytics-performance-panel h3 {
-    margin: 0 0 10px;
+    margin: 0;
     font-size: 14px;
     font-weight: 700;
     color: var(--text);
@@ -123,13 +159,13 @@
 }
 
 .analytics-stat-label {
-    font-size: 11.5px;
+    font-size: 11px;
     color: var(--text-dim);
     margin-bottom: 6px;
 }
 
 .analytics-stat-value {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 700;
     color: var(--text);
     font-variant-numeric: tabular-nums;
@@ -139,7 +175,7 @@
 .analytics-stat-value.positive { color: var(--pos); }
 
 .analytics-stat-sub {
-    font-size: 12px;
+    font-size: 11.5px;
     color: var(--text-faint);
     margin-top: 4px;
 }
@@ -147,7 +183,7 @@
 .analytics-stat-sub.positive { color: var(--pos); }
 .analytics-stat-sub.negative { color: var(--neg); }
 
-/* ── Bottom row ──────────────────────────────────────────────────────────── */
+/* ── Bottom row / panels ─────────────────────────────────────────────────── */
 .analytics-bottom-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -174,71 +210,123 @@
     margin: 0;
 }
 
-/* Sector donut */
-.analytics-donut-row {
+/* ── Concentration ───────────────────────────────────────────────────────── */
+.analytics-concentration-row {
     display: flex;
-    align-items: center;
-    gap: 24px;
-    flex-wrap: wrap;
+    gap: 32px;
 }
 
-.analytics-legend-list {
+/* ── Risk contributions ──────────────────────────────────────────────────── */
+.analytics-contrib-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    flex: 1;
-    min-width: 180px;
+    gap: 10px;
 }
 
-.analytics-legend-list-item {
-    display: flex;
+.analytics-contrib-row {
+    display: grid;
+    grid-template-columns: 56px 1fr 48px;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     font-size: 12.5px;
 }
 
-.analytics-legend-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 2px;
-    flex-shrink: 0;
-}
-
-.analytics-legend-list-name {
-    color: var(--text-dim);
-    flex: 1;
-}
-
-.analytics-legend-list-pct {
-    color: var(--text);
-    font-weight: 600;
-}
-
-/* Performance leaders */
-.analytics-leaders-list {
-    display: flex;
-    flex-direction: column;
-    max-height: 260px;
-    overflow-y: auto;
-}
-
-.analytics-leaders-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    font-size: 13px;
-}
-
-.analytics-leaders-symbol {
+.analytics-contrib-symbol {
     color: var(--accent);
     font-weight: 600;
 }
 
-.analytics-leaders-divider {
-    height: 1px;
-    background-color: var(--border-soft);
-    margin: 4px 0;
+.analytics-contrib-track {
+    height: 6px;
+    background-color: var(--surface-2);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.analytics-contrib-fill {
+    height: 100%;
+    background-color: var(--accent);
+    border-radius: 3px;
+}
+
+.analytics-contrib-pct {
+    text-align: right;
+    color: var(--text);
+    font-weight: 600;
+}
+
+/* ── Correlation matrix ──────────────────────────────────────────────────── */
+.analytics-corr-wrapper {
+    overflow-x: auto;
+}
+
+.analytics-corr-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.analytics-corr-table th {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-faint);
+    padding: 8px 10px;
+    text-align: center;
+}
+
+.analytics-corr-table th:first-child {
+    text-align: left;
+}
+
+.analytics-corr-table td {
+    font-size: 12px;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid var(--bg);
+    color: var(--text);
+}
+
+/* ── Distribution bar charts (hold periods, monthly trades) ────────────────── */
+.analytics-dist-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    height: 160px;
+}
+
+.analytics-dist-bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.analytics-dist-bar-track {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+}
+
+.analytics-dist-bar-fill {
+    width: 100%;
+    background-color: var(--accent);
+    border-radius: 3px 3px 0 0;
+    min-height: 2px;
+}
+
+.analytics-dist-bar-value {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 6px;
+}
+
+.analytics-dist-bar-label {
+    font-size: 9.5px;
+    color: var(--text-faint);
+    margin-top: 2px;
+    text-align: center;
+    white-space: nowrap;
 }
 
 /* ── Skeleton ────────────────────────────────────────────────────────────── */
@@ -281,6 +369,11 @@
 
     .analytics-bottom-row {
         grid-template-columns: 1fr;
+    }
+
+    .analytics-concentration-row {
+        flex-direction: column;
+        gap: 16px;
     }
 }
 
